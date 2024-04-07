@@ -10,6 +10,7 @@
 *.sdf
 *.opensdf
 *.o
+/bkdecmd
 /*.DSK
 /*.lst
 /x-*

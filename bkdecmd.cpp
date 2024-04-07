@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
         wargs.push_back(warg);
     }
 
-    return main_impl(wargs);
+    return wmain_impl(wargs);
 }
 #endif
 

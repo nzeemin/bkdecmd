@@ -3,12 +3,12 @@
 #include "ImgUtil.h"
 #include "../StringUtil.h"
 
-static const std::wstring g_strDir = L"DIR";
-static const std::wstring g_strUp = L"UP";
-static const std::wstring g_strLink = L"LINK";
+const std::wstring g_strDir = L"DIR";
+const std::wstring g_strUp = L"UP";
+const std::wstring g_strLink = L"LINK";
 
 
-static const std::wstring g_pstrExts[KNOWN_EXTS] =
+const std::wstring g_pstrExts[KNOWN_EXTS] =
 {
     L".bin",
     L".dsk",
@@ -48,18 +48,18 @@ const std::wstring g_ImageErrorStr[] =
 };
 
 
-static const std::wstring imgUtil::tblStrRec[3] =
+const std::wstring imgUtil::tblStrRec[3] =
 {
     L"ь", L"и", L"ей"
 };
-static const std::wstring imgUtil::tblStrBlk[3] =
+const std::wstring imgUtil::tblStrBlk[3] =
 {
     L"", L"а", L"ов"
 };
 
 
 // это правильная таблица
-static const wchar_t imgUtil::koi8tbl_RFC1489[128] =
+const wchar_t imgUtil::koi8tbl_RFC1489[128] =
 {
     // {200..237}
     0x2500, 0x2502, 0x250C, 0x2510, 0x2514, 0x2518, 0x251C, 0x2524,
@@ -87,7 +87,7 @@ static const wchar_t imgUtil::koi8tbl_RFC1489[128] =
 // это таблица кои8 БК11М
 // таблица соответствия верхней половины аскии кодов с 128 по 255, включая псевдографику.
 // выяснилось, что на бк11 таблица тоже нестандартная, но от бк10 тоже отличается.
-static const wchar_t imgUtil::koi8tbl11M[128] =
+const wchar_t imgUtil::koi8tbl11M[128] =
 {
     // {200..237}
     0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561, 0x2562, 0x2556,
@@ -112,7 +112,7 @@ static const wchar_t imgUtil::koi8tbl11M[128] =
 };
 
 // таблица соответствия верхней половины аскии кодов с 128 по 255, включая псевдографику
-static const wchar_t imgUtil::koi8tbl10[128] =
+const wchar_t imgUtil::koi8tbl10[128] =
 {
     // {200..237} этих символов на бк10 нету.
     L' ', L' ', L' ', L' ', L' ', L' ', L' ', L' ',

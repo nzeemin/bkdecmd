@@ -210,7 +210,7 @@ void CBKFloppyImage_ANDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
 
         if (pFR->nAttr & FR_ATTR::DIR)
         {
-            std::wstring name = strUtil::CropStr(pFR->strName, 11);
+            std::wstring name = strUtil::CropStr(pFR->strName.wstring(), 11);
             imgUtil::UNICODEtoBK(name, pRec->filename, 11, true); // берём первые 8 символов имени.
         }
         else
@@ -270,13 +270,18 @@ void CBKFloppyImage_ANDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
             биты 9-15 – год, считая от 1980 г. («эпоха MS-DOS»), возможны значения от 0 до 127 включительно, т.е. 1980-2107 гг.
             */
             tm ctm {};
+#ifdef WIN32
             gmtime_s(&ctm, &pFR->timeCreation);
+#else
+            gmtime_r(&pFR->timeCreation, &ctm);
+#endif
             pRec->date = (ctm.tm_mday & 037) | (((ctm.tm_mon & 017) + 1) << 5) | (((ctm.tm_year + 1900) > 1980 ? ctm.tm_year + 1900 - 1980 : 0) << 9);
             pRec->first_cluster = pFR->nStartBlock;
             pRec->length = pFR->nSize;
         }
     }
 }
+
 // на входе указатель на абстрактную запись.
 // в ней заполнена копия реальной записи, по ней формируем абстрактную
 void CBKFloppyImage_ANDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)

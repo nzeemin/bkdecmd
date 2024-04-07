@@ -129,7 +129,7 @@ void CBKFloppyImage_AODos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
 
         if (pFR->nAttr & FR_ATTR::DIR)
         {
-            std::wstring strDir = strUtil::CropStr(pFR->strName, 14);
+            std::wstring strDir = strUtil::CropStr(pFR->strName.wstring(), 14);
             imgUtil::UNICODEtoBK(strDir, pRec->name, 14, true);
 
             if (!bRenameOnly)

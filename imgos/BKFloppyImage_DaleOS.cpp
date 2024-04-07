@@ -40,7 +40,7 @@ void СBKFloppyImage_DaleOS::ConvertAbstractToRealRecord(BKDirDataItem *pFR, boo
             memset(pRec, 0, DALE_REC_SIZE);
         }
 
-        std::wstring strName = strUtil::CropStr(pFR->strName, 16);
+        std::wstring strName = strUtil::CropStr(pFR->strName.wstring(), 16);
         imgUtil::UNICODEtoBK(strName, pRec->name, 16, true);
         //if (!bRenameOnly)
         {

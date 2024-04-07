@@ -8,7 +8,6 @@
 #define PCH_H
 
 // Добавьте сюда заголовочные файлы для предварительной компиляции
-//#include "framework.h"
 
 #include <iostream>
 #include <iomanip>
@@ -16,6 +15,7 @@
 #include <cstring>
 #include <vector>
 #include <filesystem>
+#include <string.h>
 
 #ifdef _WIN32
 #include <io.h>
@@ -35,9 +35,8 @@ namespace fs = std::filesystem;
 #define ASSERT assert
 #define TRACE ;
 #else
-#define ASSERT ;
-#define TRACE ;
+#define ASSERT
+#define TRACE
 #endif
-
 
 #endif //PCH_H

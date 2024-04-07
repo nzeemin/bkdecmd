@@ -121,13 +121,13 @@ void CBKFloppyImage_Csidos3::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
         {
             // дырка
             // игнорируем
-            strcpy_s(reinterpret_cast<char *>(pRec->name), 11, "HOLE\0");
+            strncpy(reinterpret_cast<char *>(pRec->name), "HOLE\0", 11);
         }
         else if (pRec->type == 0312)
         {
             // запись не содержит информации
             // игнорируем
-            strcpy_s(reinterpret_cast<char *>(pRec->name), 11, "NONE\0");
+            strncpy(reinterpret_cast<char *>(pRec->name), "NONE\0", 11);
         }
         else if (pRec->type == 0377)
         {
@@ -141,7 +141,7 @@ void CBKFloppyImage_Csidos3::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
 
             if (pRec->name[0] == 0)
             {
-                strcpy_s(reinterpret_cast<char *>(pRec->name), 11, "BAD\0");
+                strncpy(reinterpret_cast<char *>(pRec->name), "BAD\0", 11);
             }
         }
         else if ((1 <= pRec->type) && (pRec->type <= 0310))

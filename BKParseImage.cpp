@@ -102,7 +102,7 @@ PARSE_RESULT CBKParseImage::ParseImage(const fs::path &fname, unsigned long nBas
     };
     CBKImgFile BKFloppyImgFile;
     PARSE_RESULT ret;
-    ret.strName = fname;
+    ret.strName = fname.wstring();
     ret.nBaseOffset = nBaseOffset;
     ret.imageOSType = IMAGE_TYPE::ERROR_NOIMAGE; // предполагаем изначально такое
 

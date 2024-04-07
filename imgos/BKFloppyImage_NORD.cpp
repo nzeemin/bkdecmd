@@ -155,7 +155,7 @@ void CBKFloppyImage_Nord::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool b
 
         if (pFR->nAttr & FR_ATTR::DIR)
         {
-            std::wstring strDir = strUtil::CropStr(pFR->strName, 13);
+            std::wstring strDir = strUtil::CropStr(pFR->strName.wstring(), 13);
             imgUtil::UNICODEtoBK(strDir, pRec->name + 1, 13, true);
             pRec->name[0] = 0177; // признак каталога
 

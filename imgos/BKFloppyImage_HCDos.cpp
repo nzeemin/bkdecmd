@@ -98,7 +98,11 @@ void CBKFloppyImage_HCDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         {
             pRec->length = pFR->nSize;
             tm ctm;
+#ifdef WIN32
             gmtime_s(&ctm, &pFR->timeCreation);
+#else
+            gmtime_r(&pFR->timeCreation, &ctm);
+#endif
             int year = (ctm.tm_year + 1900) > 1972 ? ctm.tm_year + 1900 - 1972 : 0;
             pRec->date = (((ctm.tm_mon & 0xf) + 1) << 10) | ((ctm.tm_mday & 0x1f) << 5) | (year & 0x1f) | ((year & 0x60) << 9);
         }

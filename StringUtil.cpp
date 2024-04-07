@@ -43,7 +43,7 @@ std::wstring strUtil::replaceChar(const std::wstring &str, const wchar_t src, co
     {
         std::wstring res;
 
-for (auto wch : str)
+        for (auto wch : str)
         {
             if (wch == src)
             {
@@ -65,9 +65,9 @@ std::wstring strUtil::replaceChars(const std::wstring &str, const std::wstring &
     {
         std::wstring res;
 
-for (auto wch : str)
+        for (auto wch : str)
         {
-for (auto s : src)
+            for (auto s : src)
             {
                 if (wch == s)
                 {
@@ -91,14 +91,20 @@ std::wstring strUtil::strToUpper(const std::wstring &str)
 
     if (!str.empty())
     {
+#ifdef WIN32
         _locale_t loc = _create_locale(LC_ALL, "Russian");
-
-for (auto n : str)
+        for (auto n : str)
         {
-            res.push_back(_toupper_l(n, loc));
+            res.push_back(toupper_l(n, loc));
         }
-
         _free_locale(loc);
+#else
+        std::locale loc = std::locale("ru-ru");
+        for (auto n : str)
+        {
+            res.push_back(toupper(n, loc));
+        }
+#endif
     }
 
     return res;
@@ -110,14 +116,20 @@ std::wstring strUtil::strToLower(const std::wstring &str)
 
     if (!str.empty())
     {
-        _locale_t loc = _create_locale(LC_ALL, "Russian");
-
-for (auto n : str)
+#ifdef WIN32
+        locale_t loc = _create_locale(LC_ALL, "Russian");
+        for (auto n : str)
         {
-            res.push_back(_tolower_l(n, loc));
+            res.push_back(tolower_l(n, loc));
         }
-
         _free_locale(loc);
+#else
+        std::locale loc = std::locale("ru-ru");
+        for (auto n : str)
+        {
+            res.push_back(tolower(n, loc));
+        }
+#endif
     }
 
     return res;

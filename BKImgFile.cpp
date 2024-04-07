@@ -54,7 +54,7 @@ bool CBKImgFile::Open(const fs::path &pathName, const bool bWrite)
 
     if (bRet)
     {
-        m_strName = pathName;
+        m_strName = pathName.wstring();
     }
 
     return bRet;

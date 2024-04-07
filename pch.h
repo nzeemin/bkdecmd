@@ -24,6 +24,10 @@
 #include <locale>
 #endif
 
+#ifndef _WIN32
+#define swprintf _snwprintf
+#endif
+
 namespace fs = std::filesystem;
 
 #ifdef _DEBUG

@@ -44,8 +44,8 @@ bool CBKImgFile::Open(const fs::path &pathName, const bool bWrite)
     bool bRet = false;
 
     // открываем образ
-    std::wstring strMode = bWrite ? L"r+b" : L"rb";
-    m_f = _wfopen(pathName.c_str(), strMode.c_str());
+    const char* strMode = bWrite ? "r+b" : "rb";
+    m_f = fopen(pathName.string().c_str(), strMode);
 
     if (m_f)
     {

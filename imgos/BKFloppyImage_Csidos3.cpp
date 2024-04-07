@@ -539,7 +539,7 @@ void CBKFloppyImage_Csidos3::OnExtract(BKDirDataItem *pFR, std::wstring &strName
     int p0 = (dd >> 4) & 7;
     int p1 = dd & 7;
     wchar_t tch = (dd & 010) ? L'!' : L'-';
-    _snwprintf(buff, 32, L"#%d%c%d\0", PgNumF2L[p0], tch, PgNumF2L[p1]);
+    swprintf(buff, 32, L"#%d%c%d\0", PgNumF2L[p0], tch, PgNumF2L[p1]);
     strName += std::wstring(buff);
 }
 

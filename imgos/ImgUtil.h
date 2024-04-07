@@ -155,7 +155,7 @@ namespace imgUtil
     template<typename ... Args>
     std::wstring string_format(const std::wstring &format, Args ... args)
     {
-        size_t size = _snwprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+        size_t size = swprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
 
         if (size <= 0)
         {
@@ -163,7 +163,7 @@ namespace imgUtil
         }
 
         auto buf = std::vector<wchar_t>(size);
-        _snwprintf(buf.data(), size, format.c_str(), args ...);
+        swprintf(buf.data(), size, format.c_str(), args ...);
         return std::wstring(buf.data(), buf.data() + size - 1); // We don't want the '\0' inside
     }
 

@@ -2,11 +2,14 @@
 /Release
 /x64
 /.vs
+/.idea
 /*.ncb
 /*.suo
 *.user
 /ipch
 *.sdf
 *.opensdf
+*.o
 /*.DSK
 /*.lst
+/x-*

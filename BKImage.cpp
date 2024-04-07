@@ -231,9 +231,9 @@ bool CBKImage::PrintCurrentDir(CBKImage::ItemPanePos pp)
         std::wcout << S_CATALOG_SEPARATOR_TAIL;
     std::wcout << std::endl;
 
-for (auto & fr : *pLS)
+    for (auto & fr : *pLS)
     {
-        std::wstring str = fr.strName;
+        std::wstring str = fr.strName.wstring();
         strUtil::trim(str, L'\"');  //TODO разобраться откуда там вообще кавычки
         std::wcout << std::setfill(L' ') << std::setw(24) << std::left << str << L" | ";
 
@@ -277,11 +277,11 @@ for (auto & fr : *pLS)
 
             std::wcout << std::setw(4) << str << L" | ";
             wchar_t buff[32];
-            _snwprintf(buff, 32, L"%d\0", fr.nBlkSize);
+            swprintf(buff, 32, L"%d\0", fr.nBlkSize);
             std::wcout << std::setw(6) << std::right << buff << "  ";
-            _snwprintf(buff, 32, L"%06o\0", fr.nAddress);
+            swprintf(buff, 32, L"%06o\0", fr.nAddress);
             std::wcout << std::setw(6) << std::right << buff << " ";
-            _snwprintf(buff, 32, L"%06o\0", fr.nSize);
+            swprintf(buff, 32, L"%06o\0", fr.nSize);
             std::wcout << std::setw(7) << std::right << buff << L" | ";
         }
 
@@ -385,7 +385,7 @@ BKDirDataItem* CBKImage::FindRecordByName(std::wstring strName)
 
     std::vector<BKDirDataItem>* pLS = m_pFloppyImage->CurrDirectory();
 
-for (auto & fr : *pLS)
+    for (auto & fr : *pLS)
     {
         if (fr.nAttr & (FR_ATTR::DELETED | FR_ATTR::LINK | FR_ATTR::VOLUMEID))
             continue;
@@ -412,7 +412,7 @@ BKDirDataItem* CBKImage::FindFileRecord(std::wstring strFileName)
 
     std::vector<BKDirDataItem>* pLS = m_pFloppyImage->CurrDirectory();
 
-for (auto & fr : *pLS)
+    for (auto & fr : *pLS)
     {
         if (fr.nAttr & (FR_ATTR::DIR | FR_ATTR::DELETED | FR_ATTR::LINK | FR_ATTR::VOLUMEID))
             continue;
@@ -750,7 +750,7 @@ bool CBKImage::ExtractObject(BKDirDataItem *fr)
         m_pFloppyImage->ChangeDir(fr);
         BKDirDataItem cur_fr;
         const fs::path tmpStorePath = m_strStorePath;
-        const fs::path strDirName = imgUtil::SetSafeName(fr->strName);
+        const fs::path strDirName = imgUtil::SetSafeName(fr->strName.wstring());
         SetStorePath(m_strStorePath / strDirName);
         std::error_code ec;
 
@@ -812,7 +812,7 @@ bool CBKImage::ExtractFile(BKDirDataItem *fr)
     AnalyseFileStruct AFS;
     AFS.nAddr = fr->nAddress;
     AFS.nLen = fr->nSize;
-    AFS.strName = imgUtil::SetSafeName(fr->strName);
+    AFS.strName = imgUtil::SetSafeName(fr->strName.wstring());
     imgUtil::UNICODEtoBK(fr->strName, AFS.OrigName, 16, true);
 
     if (bLogDisk) // логическим дискам принудительно выставляем расширение dsk
@@ -857,7 +857,8 @@ bool CBKImage::ExtractFile(BKDirDataItem *fr)
         }
     }
 
-    if ((AFS.file = _wfopen((m_strStorePath / AFS.strName).c_str(), L"w+b")) != nullptr)
+    AFS.file = fopen((m_strStorePath / AFS.strName).string().c_str(), "w+b");
+    if (AFS.file != nullptr)
     {
         const int nLen = fr->nSize;
         auto Buffer = std::vector<uint8_t>(m_pFloppyImage->EvenSizeByBlock(nLen));
@@ -1012,7 +1013,7 @@ bool CBKImage::AnalyseExportFile(AnalyseFileStruct *a)
         nStartAddr = 0;
     }
 
-    FILE *f = _wfopen((m_strStorePath / L"extractlog.txt").c_str(), L"at");
+    FILE *f = fopen((m_strStorePath / L"extractlog.txt").string().c_str(), "at");
 
     if (f)
     {
@@ -1161,7 +1162,8 @@ ADDOP_RESULT CBKImage::AddFile(const fs::path& findFile)
             memset(pBuffer, 0, nBufferSize);
             AnalyseFileStruct AFS;
 
-            if ((AFS.file = _wfopen(findFile.c_str(), L"rb")) != nullptr)
+            AFS.file = fopen(findFile.string().c_str(), "rb");
+            if (AFS.file != nullptr)
             {
                 AFS.strName = findFile.stem();
                 AFS.strExt = findFile.extension();

@@ -9,19 +9,22 @@
 
 // Добавьте сюда заголовочные файлы для предварительной компиляции
 
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <filesystem>
+#include <locale>
+#include <codecvt>
+
 #include <string.h>
 
 #ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>
-#else
-#include <locale>
 #endif
 
 #ifdef _WIN32

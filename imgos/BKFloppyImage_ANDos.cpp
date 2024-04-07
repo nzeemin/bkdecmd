@@ -270,7 +270,7 @@ void CBKFloppyImage_ANDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
             биты 9-15 – год, считая от 1980 г. («эпоха MS-DOS»), возможны значения от 0 до 127 включительно, т.е. 1980-2107 гг.
             */
             tm ctm {};
-#ifdef WIN32
+#ifdef _WIN32
             gmtime_s(&ctm, &pFR->timeCreation);
 #else
             gmtime_r(&pFR->timeCreation, &ctm);

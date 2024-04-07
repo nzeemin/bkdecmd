@@ -10,9 +10,11 @@
 //////////////////////////////////////////////////////////////////////
 // Preliminary function declarations
 
+int wmain_impl(std::vector<std::wstring>& wargs);
+
 void PrintWelcome();
 void PrintUsage();
-bool ParseCommandLine(int argc, wchar_t* argv[]);
+bool ParseCommandLine(std::vector<std::wstring>& wargs);
 
 bool DoDiskList();
 bool DoDiskExtractFile();
@@ -31,9 +33,9 @@ bool DoDiskDeleteFile();
 #define OPTIONSTR "-"
 #endif
 
-const wchar_t* g_sCommand = nullptr;
-const wchar_t* g_sImageFileName = nullptr;
-const wchar_t* g_sFileName = nullptr;
+std::wstring g_sCommand;
+std::wstring g_sImageFileName;
+std::wstring g_sFileName;
 
 enum CommandRequirements
 {
@@ -83,12 +85,11 @@ void PrintUsage()
             << L"    bkdecmd d <ImageFile> <FileName>  - удалить файл" << std::endl;
 }
 
-
-bool ParseCommandLine(int argc, wchar_t* argv[])
+bool ParseCommandLine(std::vector<std::wstring>& wargs)
 {
-    for (int argn = 1; argn < argc; argn++)
+    for (auto warg : wargs)
     {
-        const wchar_t* arg = argv[argn];
+        const wchar_t* arg = warg.c_str();
         if (arg[0] == OPTIONCHAR)
         {
             {
@@ -98,11 +99,11 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
         }
         else
         {
-            if (g_sCommand == nullptr)
+            if (g_sCommand.empty())
                 g_sCommand = arg;
-            else if (g_sImageFileName == nullptr)
+            else if (g_sImageFileName.empty())
                 g_sImageFileName = arg;
-            else if (g_sFileName == nullptr)
+            else if (g_sFileName.empty())
                 g_sFileName = arg;
             else
             {
@@ -113,7 +114,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     }
 
     // Parsed options validation
-    if (g_sCommand == nullptr)
+    if (g_sCommand.empty())
     {
         std::wcout << L"Не указана команда." << std::endl;
         return false;
@@ -121,7 +122,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     CommandInfo* pcinfo = nullptr;
     for (int i = 0; i < g_CommandInfos_count; i++)
     {
-        if (wcscmp(g_sCommand, g_CommandInfos[i].command) == 0)
+        if (wcscmp(g_sCommand.c_str(), g_CommandInfos[i].command) == 0)
         {
             pcinfo = g_CommandInfos + i;
             break;
@@ -135,12 +136,12 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     g_pCommand = pcinfo;
 
     // More pre-checks based on command requirements
-    if (g_sImageFileName == nullptr)
+    if (g_sImageFileName.empty())
     {
         std::wcout << L"Файл образа не указан." << std::endl;
         return false;
     }
-    if ((pcinfo->requirements & CMDR_PARAM_FILENAME) != 0 && g_sFileName == nullptr)
+    if ((pcinfo->requirements & CMDR_PARAM_FILENAME) != 0 && g_sFileName.empty())
     {
         std::wcout << L"Ожидалось имя файла." << std::endl;
         return false;
@@ -154,18 +155,44 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     return true;
 }
 
+#ifdef _WIN32
 int wmain(int argc, wchar_t* argv[])
 {
-#ifdef _WIN32
+    // Console output mode
     _setmode(_fileno(stdout), _O_U16TEXT);
-#else // #D
+
+    std::vector<std::wstring> wargs;
+    for (int argn = 1; argn < argc; argn++)
+    {
+        wargs.push_back(std::wstring(argv[argn]));
+    }
+
+    return wmain_impl(wargs);
+}
+#else
+int main(int argc, char* argv[])
+{
+    // Console output mode
     std::locale::global(std::locale(""));
     std::wcout.imbue(std::locale());
+
+    std::vector<std::wstring> wargs;
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    for (int argn = 1; argn < argc; argn++)
+    {
+        std::wstring warg = converter.from_bytes(argv[argn]);
+        wargs.push_back(warg);
+    }
+
+    return main_impl(wargs);
+}
 #endif
 
+int wmain_impl(std::vector<std::wstring>& wargs)
+{
     PrintWelcome();
 
-    if (!ParseCommandLine(argc, argv))
+    if (!ParseCommandLine(wargs))
     {
         PrintUsage();
         return 255;

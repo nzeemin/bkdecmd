@@ -98,7 +98,7 @@ void CBKFloppyImage_HCDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         {
             pRec->length = pFR->nSize;
             tm ctm;
-#ifdef WIN32
+#ifdef _WIN32
             gmtime_s(&ctm, &pFR->timeCreation);
 #else
             gmtime_r(&pFR->timeCreation, &ctm);

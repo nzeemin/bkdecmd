@@ -1,6 +1,7 @@
 /Debug
 /Release
 /x64
+/.vs
 /*.ncb
 /*.suo
 *.user

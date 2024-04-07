@@ -857,7 +857,7 @@ bool CBKImage::ExtractFile(BKDirDataItem *fr)
         }
     }
 
-    if ((AFS.file = _tfopen((m_strStorePath / AFS.strName).c_str(), _T("w+b"))) != nullptr)
+    if ((AFS.file = _wfopen((m_strStorePath / AFS.strName).c_str(), L"w+b")) != nullptr)
     {
         const int nLen = fr->nSize;
         auto Buffer = std::vector<uint8_t>(m_pFloppyImage->EvenSizeByBlock(nLen));
@@ -1161,7 +1161,7 @@ ADDOP_RESULT CBKImage::AddFile(const fs::path& findFile)
             memset(pBuffer, 0, nBufferSize);
             AnalyseFileStruct AFS;
 
-            if ((AFS.file = _tfopen(findFile.c_str(), _T("rb"))) != nullptr)
+            if ((AFS.file = _wfopen(findFile.c_str(), L"rb")) != nullptr)
             {
                 AFS.strName = findFile.stem();
                 AFS.strExt = findFile.extension();

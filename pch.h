@@ -25,8 +25,6 @@
 
 namespace fs = std::filesystem;
 
-#include <tchar.h>
-
 #ifdef _DEBUG
 #include <cassert>
 #define ASSERT assert

@@ -24,7 +24,7 @@
 #include <locale>
 #endif
 
-#ifndef _WIN32
+#ifdef _WIN32
 #define swprintf _snwprintf
 #endif
 

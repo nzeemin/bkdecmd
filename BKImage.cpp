@@ -813,7 +813,7 @@ bool CBKImage::ExtractFile(BKDirDataItem *fr)
     AFS.nAddr = fr->nAddress;
     AFS.nLen = fr->nSize;
     AFS.strName = imgUtil::SetSafeName(fr->strName.wstring());
-    imgUtil::UNICODEtoBK(fr->strName, AFS.OrigName, 16, true);
+    imgUtil::UNICODEtoBK(fr->strName.wstring(), AFS.OrigName, 16, true);
 
     if (bLogDisk) // логическим дискам принудительно выставляем расширение dsk
     {
@@ -1165,8 +1165,8 @@ ADDOP_RESULT CBKImage::AddFile(const fs::path& findFile)
             AFS.file = fopen(findFile.string().c_str(), "rb");
             if (AFS.file != nullptr)
             {
-                AFS.strName = findFile.stem();
-                AFS.strExt = findFile.extension();
+                AFS.strName = findFile.stem().wstring();
+                AFS.strExt = findFile.extension().wstring();
                 AFS.nAddr = 01000;
                 AFS.nLen = AFR.nSize;
                 AFS.nCRC = 0;

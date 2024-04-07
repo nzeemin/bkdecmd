@@ -1,4 +1,4 @@
-// bkdecmd.cpp : This file contains the 'main' function. Program execution begins and ends there.
+п»ї// bkdecmd.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include "pch.h"
@@ -69,18 +69,18 @@ PARSE_RESULT g_sParseResult;
 
 void PrintWelcome()
 {
-    std::wcout << L"Утилита работы с дисками БК BKDEcmd на основе кода BKDE [" << __DATE__ << " " << __TIME__ << "]";
+    std::wcout << L"РЈС‚РёР»РёС‚Р° СЂР°Р±РѕС‚С‹ СЃ РґРёСЃРєР°РјРё Р‘Рљ BKDEcmd РЅР° РѕСЃРЅРѕРІРµ РєРѕРґР° BKDE [" << __DATE__ << " " << __TIME__ << "]";
     std::wcout << std::endl;
 }
 
 void PrintUsage()
 {
-    std::wcout << std::endl << L"Использование:" << std::endl
-            << L"  Команды для работы с образами дисков:" << std::endl
-            << L"    bkdecmd l <ImageFile>  - показать содержимое каталога" << std::endl
-            << L"    bkdecmd e <ImageFile> <FileName>  - извлечь файл" << std::endl
-            << L"    bkdecmd a <ImageFile> <FileName>  - добавить файл" << std::endl
-            << L"    bkdecmd d <ImageFile> <FileName>  - удалить файл" << std::endl;
+    std::wcout << std::endl << L"РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ:" << std::endl
+            << L"  РљРѕРјР°РЅРґС‹ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕР±СЂР°Р·Р°РјРё РґРёСЃРєРѕРІ:" << std::endl
+            << L"    bkdecmd l <ImageFile>  - РїРѕРєР°Р·Р°С‚СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ РєР°С‚Р°Р»РѕРіР°" << std::endl
+            << L"    bkdecmd e <ImageFile> <FileName>  - РёР·РІР»РµС‡СЊ С„Р°Р№Р»" << std::endl
+            << L"    bkdecmd a <ImageFile> <FileName>  - РґРѕР±Р°РІРёС‚СЊ С„Р°Р№Р»" << std::endl
+            << L"    bkdecmd d <ImageFile> <FileName>  - СѓРґР°Р»РёС‚СЊ С„Р°Р№Р»" << std::endl;
 }
 
 
@@ -92,7 +92,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
         if (arg[0] == OPTIONCHAR)
         {
             {
-                std::wcout << L"Неизвестная опция: " << arg << std::endl;
+                std::wcout << L"РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕРїС†РёСЏ: " << arg << std::endl;
                 return false;
             }
         }
@@ -106,7 +106,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
                 g_sFileName = arg;
             else
             {
-                std::wcout << L"Неизвестный параметр: " << arg << std::endl;
+                std::wcout << L"РќРµРёР·РІРµСЃС‚РЅС‹Р№ РїР°СЂР°РјРµС‚СЂ: " << arg << std::endl;
                 return false;
             }
         }
@@ -115,7 +115,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     // Parsed options validation
     if (g_sCommand == nullptr)
     {
-        std::wcout << L"Не указана команда." << std::endl;
+        std::wcout << L"РќРµ СѓРєР°Р·Р°РЅР° РєРѕРјР°РЅРґР°." << std::endl;
         return false;
     }
     CommandInfo* pcinfo = nullptr;
@@ -129,7 +129,7 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     }
     if (pcinfo == nullptr)
     {
-        std::wcout << L"Неизвестная команда: " << g_sCommand << std::endl;
+        std::wcout << L"РќРµРёР·РІРµСЃС‚РЅР°СЏ РєРѕРјР°РЅРґР°: " << g_sCommand << std::endl;
         return false;
     }
     g_pCommand = pcinfo;
@@ -137,12 +137,12 @@ bool ParseCommandLine(int argc, wchar_t* argv[])
     // More pre-checks based on command requirements
     if (g_sImageFileName == nullptr)
     {
-        std::wcout << L"Файл образа не указан." << std::endl;
+        std::wcout << L"Р¤Р°Р№Р» РѕР±СЂР°Р·Р° РЅРµ СѓРєР°Р·Р°РЅ." << std::endl;
         return false;
     }
     if ((pcinfo->requirements & CMDR_PARAM_FILENAME) != 0 && g_sFileName == nullptr)
     {
-        std::wcout << L"Ожидалось имя файла." << std::endl;
+        std::wcout << L"РћР¶РёРґР°Р»РѕСЃСЊ РёРјСЏ С„Р°Р№Р»Р°." << std::endl;
         return false;
     }
     //if ((pcinfo->requirements & CMDR_IMAGEFILERW) != 0 && g_diskimage.IsReadOnly())
@@ -171,36 +171,36 @@ int wmain(int argc, wchar_t* argv[])
         return 255;
     }
 
-    std::wcout << L"Команда: " << g_sCommand << std::endl;
-    std::wcout << L"Образ диска: " << g_sImageFileName << std::endl;
+    std::wcout << L"РљРѕРјР°РЅРґР°: " << g_sCommand << std::endl;
+    std::wcout << L"РћР±СЂР°Р· РґРёСЃРєР°: " << g_sImageFileName << std::endl;
 
-    // Подключение к файлу образа
+    // РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє С„Р°Р№Р»Сѓ РѕР±СЂР°Р·Р°
     g_sParseResult = g_ParserImage.ParseImage(g_sImageFileName, 0);
     if (g_sParseResult.imageOSType == IMAGE_TYPE::ERROR_NOIMAGE)
     {
-        std::wcout << L"Какая-то ошибка при чтении файла образа, либо он повреждён, либо недоступен по чтению, из-за блокирования другой программой." << std::endl;
+        std::wcout << L"РљР°РєР°СЏ-С‚Рѕ РѕС€РёР±РєР° РїСЂРё С‡С‚РµРЅРёРё С„Р°Р№Р»Р° РѕР±СЂР°Р·Р°, Р»РёР±Рѕ РѕРЅ РїРѕРІСЂРµР¶РґС‘РЅ, Р»РёР±Рѕ РЅРµРґРѕСЃС‚СѓРїРµРЅ РїРѕ С‡С‚РµРЅРёСЋ, РёР·-Р·Р° Р±Р»РѕРєРёСЂРѕРІР°РЅРёСЏ РґСЂСѓРіРѕР№ РїСЂРѕРіСЂР°РјРјРѕР№." << std::endl;
         return 255;
     }
     if (g_sParseResult.imageOSType == IMAGE_TYPE::UNKNOWN)
     {
-        std::wcout << L"Неопознанная файловая система образа." << std::endl;
+        std::wcout << L"РќРµРѕРїРѕР·РЅР°РЅРЅР°СЏ С„Р°Р№Р»РѕРІР°СЏ СЃРёСЃС‚РµРјР° РѕР±СЂР°Р·Р°." << std::endl;
         return 255;
     }
 
-    // теперь, если образ опознался, надо создать объект, соответствующий файловой системе
+    // С‚РµРїРµСЂСЊ, РµСЃР»Рё РѕР±СЂР°Р· РѕРїРѕР·РЅР°Р»СЃСЏ, РЅР°РґРѕ СЃРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ С„Р°Р№Р»РѕРІРѕР№ СЃРёСЃС‚РµРјРµ
     g_BKImage.ClearImgVector();
 
     uint32_t flg = g_BKImage.Open(g_sParseResult);
     if (flg == 0)
     {
-        std::wcout << L"Недостаточно памяти!" << std::endl;
+        std::wcout << L"РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїР°РјСЏС‚Рё!" << std::endl;
         return 255;
     }
 
-    std::wcout << L"Формат: " << g_BKImage.GetImgFormatName() << L"  ";
-    std::wcout << L"Размер: " << g_BKImage.GetImgSize() << L"  ";
-    //std::wcout << L"Свободно: " << g_BKImage.GetImageFreeSpace() << L"  ";
-    std::wcout << L"Режим: " << (g_BKImage.GetImageOpenStatus() ? L"RO" : L"RW") << std::endl;
+    std::wcout << L"Р¤РѕСЂРјР°С‚: " << g_BKImage.GetImgFormatName() << L"  ";
+    std::wcout << L"Р Р°Р·РјРµСЂ: " << g_BKImage.GetImgSize() << L"  ";
+    //std::wcout << L"РЎРІРѕР±РѕРґРЅРѕ: " << g_BKImage.GetImageFreeSpace() << L"  ";
+    std::wcout << L"Р РµР¶РёРј: " << (g_BKImage.GetImageOpenStatus() ? L"RO" : L"RW") << std::endl;
     std::wcout << std::endl;
 
     // Main task
@@ -219,7 +219,7 @@ int wmain(int argc, wchar_t* argv[])
 
 bool DoDiskList()
 {
-    // Читаем и печатаем список файлов в корневой папке
+    // Р§РёС‚Р°РµРј Рё РїРµС‡Р°С‚Р°РµРј СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ РІ РєРѕСЂРЅРµРІРѕР№ РїР°РїРєРµ
     CBKImage::ItemPanePos pp(0, 0);
     return g_BKImage.PrintCurrentDir(pp);
 }
@@ -231,27 +231,27 @@ bool DoDiskExtractFile()
 
 bool DoDiskAddFile()
 {
-    // Проверяем, есть ли у нас такой файл/директория
-    if (fs::is_directory(g_sFileName))  // это директория
+    // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё Сѓ РЅР°СЃ С‚Р°РєРѕР№ С„Р°Р№Р»/РґРёСЂРµРєС‚РѕСЂРёСЏ
+    if (fs::is_directory(g_sFileName))  // СЌС‚Рѕ РґРёСЂРµРєС‚РѕСЂРёСЏ
     {
-        std::wcout << L"Добавление директорий пока не реализовано." << std::endl;
+        std::wcout << L"Р”РѕР±Р°РІР»РµРЅРёРµ РґРёСЂРµРєС‚РѕСЂРёР№ РїРѕРєР° РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ." << std::endl;
         return false;
     }
     if (!fs::is_regular_file(g_sFileName))
     {
-        std::wcout << L"Добавляемый файл не найден: " << g_sFileName << std::endl;
+        std::wcout << L"Р”РѕР±Р°РІР»СЏРµРјС‹Р№ С„Р°Р№Р» РЅРµ РЅР°Р№РґРµРЅ: " << g_sFileName << std::endl;
         return false;
     }
 
-    // Сначала поищем файл/директорию с таким именем
+    // РЎРЅР°С‡Р°Р»Р° РїРѕРёС‰РµРј С„Р°Р№Р»/РґРёСЂРµРєС‚РѕСЂРёСЋ СЃ С‚Р°РєРёРј РёРјРµРЅРµРј
     auto fr = g_BKImage.FindRecordByName(g_sFileName);
     if (fr != nullptr)
     {
-        std::wcout << L"Уже существует файл или директория с таким именем: " << g_sFileName << std::endl;
+        std::wcout << L"РЈР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ С„Р°Р№Р» РёР»Рё РґРёСЂРµРєС‚РѕСЂРёСЏ СЃ С‚Р°РєРёРј РёРјРµРЅРµРј: " << g_sFileName << std::endl;
         return false;
     }
 
-    //TODO: Если существующий объект это файл и мы добавляем файл, можно предлагать перезаписать
+    //TODO: Р•СЃР»Рё СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РѕР±СЉРµРєС‚ СЌС‚Рѕ С„Р°Р№Р» Рё РјС‹ РґРѕР±Р°РІР»СЏРµРј С„Р°Р№Р», РјРѕР¶РЅРѕ РїСЂРµРґР»Р°РіР°С‚СЊ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ
 
     ADDOP_RESULT ret;
     ret = g_BKImage.AddFile(g_sFileName);
@@ -259,11 +259,11 @@ bool DoDiskAddFile()
     if (ret.nError != ADD_ERROR::OK_NOERROR)
     {
         std::wstring serror = g_AddOpErrorStr[(int)ret.nError];
-        std::wcout << L"Не удалось добавить файл, ошибка: " << serror << std::endl;
+        std::wcout << L"РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ С„Р°Р№Р», РѕС€РёР±РєР°: " << serror << std::endl;
         return false;
     }
 
-    std::wcout << L"Файл добавлен: " << g_sFileName << std::endl;
+    std::wcout << L"Р¤Р°Р№Р» РґРѕР±Р°РІР»РµРЅ: " << g_sFileName << std::endl;
     return true;
 }
 

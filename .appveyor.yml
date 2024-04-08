@@ -1,0 +1,26 @@
+
+init:
+  - git config --global core.autocrlf input
+  
+clone_folder: C:\projects\bkdecmd
+shallow_clone: true
+
+matrix:
+  fast_finish: false
+
+platform:
+  - Win32
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+# See https://www.appveyor.com/docs/windows-images-software/
+environment:
+  matrix:
+    - toolchain: msvc22
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+
+build:
+  project: bkdecmd.sln

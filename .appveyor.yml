@@ -1,7 +1,7 @@
 
 init:
   - git config --global core.autocrlf input
-  
+
 clone_folder: C:\projects\bkdecmd
 shallow_clone: true
 
@@ -9,7 +9,7 @@ matrix:
   fast_finish: false
 
 platform:
-  - Win32
+  - x86
   - x64
 
 configuration:

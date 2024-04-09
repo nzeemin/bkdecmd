@@ -38,10 +38,10 @@ namespace fs = std::filesystem;
 #ifdef _DEBUG
 #include <cassert>
 #define ASSERT assert
-#define TRACE ;
+#define TRACE ((void)0)
 #else
-#define ASSERT
-#define TRACE
+#define ASSERT ((void)0)
+#define TRACE ((void)0)
 #endif
 
 #endif //PCH_H

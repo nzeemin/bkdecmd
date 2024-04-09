@@ -13,9 +13,10 @@ struct CsidosFileRecord
     uint16_t    start_block;    // начальный блок
     uint16_t    address;        // адрес загрузки
     uint16_t    length;         // длина файла, в байтах или блоках, зависит от статуса
+
     CsidosFileRecord()
     {
-        memset(this, 0, sizeof(CsidosFileRecord));
+        clear();
     }
     CsidosFileRecord &operator = (const CsidosFileRecord &src)
     {
@@ -26,6 +27,10 @@ struct CsidosFileRecord
     {
         memcpy(this, src, sizeof(CsidosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(CsidosFileRecord));
     }
 };
 

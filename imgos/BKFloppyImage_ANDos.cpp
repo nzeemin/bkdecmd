@@ -205,7 +205,7 @@ void CBKFloppyImage_ANDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(AndosFileRecord);
-            memset(pRec, 0, sizeof(AndosFileRecord));
+            pRec->clear();
         }
 
         if (pFR->nAttr & FR_ATTR::DIR)

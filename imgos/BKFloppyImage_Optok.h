@@ -21,7 +21,7 @@ struct OptokFileRecord
 
     OptokFileRecord()
     {
-        memset(this, 0, sizeof(OptokFileRecord));
+        clear();
     }
     OptokFileRecord &operator = (const OptokFileRecord &src)
     {
@@ -32,6 +32,10 @@ struct OptokFileRecord
     {
         memcpy(this, src, sizeof(OptokFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(OptokFileRecord));
     }
 };
 #pragma pack(pop)

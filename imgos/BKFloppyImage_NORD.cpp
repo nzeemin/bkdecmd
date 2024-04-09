@@ -138,7 +138,7 @@ void CBKFloppyImage_Nord::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool b
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(NordFileRecord);
-            memset(pRec, 0, sizeof(NordFileRecord));
+            pRec->clear();
         }
 
         // надо сформировать мкдосную запись из абстрактной
@@ -1111,7 +1111,7 @@ bool CBKFloppyImage_Nord::Squeeze()
                     n++;
                 }
 
-                memset(&m_pDiskCat[m_nMKLastCatRecord--], 0, sizeof(NordFileRecord));
+                m_pDiskCat[m_nMKLastCatRecord--].clear();
                 continue; // и всё сначала
             }
 

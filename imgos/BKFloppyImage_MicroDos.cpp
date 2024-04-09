@@ -73,7 +73,7 @@ void CBKFloppyImage_MicroDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bo
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(MicrodosFileRecord);
-            memset(pRec, 0, sizeof(MicrodosFileRecord));
+            pRec->clear();
         }
 
         // надо сформировать мкдосную запись из абстрактной
@@ -609,7 +609,7 @@ bool CBKFloppyImage_MicroDos::Squeeze()
                     n++;
                 }
 
-                memset(&m_pDiskCat[m_nMKLastCatRecord--], 0, sizeof(MicrodosFileRecord));
+                m_pDiskCat[m_nMKLastCatRecord--].clear();
                 continue; // и всё сначала
             }
 

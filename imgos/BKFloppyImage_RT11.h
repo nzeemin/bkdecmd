@@ -19,7 +19,7 @@ struct RT11FileRecord
 
     RT11FileRecord()
     {
-        memset(this, 0, sizeof(RT11FileRecord));
+        clear();
     }
     RT11FileRecord &operator = (const RT11FileRecord &src)
     {
@@ -30,6 +30,10 @@ struct RT11FileRecord
     {
         memcpy(this, src, sizeof(RT11FileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset((void*)this, 0, sizeof(RT11FileRecord));
     }
 };
 
@@ -47,17 +51,17 @@ struct RT11FileRecordEx
     }
     RT11FileRecordEx &operator = (const RT11FileRecordEx &src)
     {
-        memcpy(this, &src, sizeof(RT11FileRecordEx));
+        memcpy((void*)this, &src, sizeof(RT11FileRecordEx));
         return *this;
     }
     RT11FileRecordEx &operator = (const RT11FileRecordEx *src)
     {
-        memcpy(this, src, sizeof(RT11FileRecordEx));
+        memcpy((void*)this, src, sizeof(RT11FileRecordEx));
         return *this;
     }
     void clear()
     {
-        memset(this, 0, sizeof(RT11FileRecordEx));
+        memset((void*)this, 0, sizeof(RT11FileRecordEx));
     }
 };
 #pragma pack(pop)

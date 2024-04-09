@@ -50,7 +50,7 @@ void CBKFloppyImage_Csidos3::ConvertAbstractToRealRecord(BKDirDataItem *pFR, boo
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(CsidosFileRecord);
-            memset(pRec, 0, sizeof(CsidosFileRecord));
+            pRec->clear();
         }
 
         // надо сформировать ксидосную запись из абстрактной
@@ -385,7 +385,7 @@ for (auto & p : m_CSICatalog)
             nRecNum = 0;
         }
 
-        memcpy(&CSICat[nRecNum], std::addressof(p), sizeof(CsidosFileRecord));
+        CSICat[nRecNum] = p;
 
         if (++nRecNum >= 25)
         {
@@ -450,7 +450,7 @@ for (auto & p : m_CSICatalog)
 
         AFR.clear();
         AFR.nSpecificDataLength = sizeof(CsidosFileRecord);
-        memcpy(pRec, std::addressof(p), sizeof(CsidosFileRecord));
+        *pRec = p;
         ConvertRealToAbstractRecord(&AFR);
 
         if ((AFR.nAttr & FR_ATTR::DIR) && !(AFR.nAttr & FR_ATTR::DELETED))

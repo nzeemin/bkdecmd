@@ -13,7 +13,7 @@ struct HolographyFileRecord
 
     HolographyFileRecord()
     {
-        memset(this, 0, sizeof(HolographyFileRecord));
+        clear();
     }
     HolographyFileRecord &operator = (const HolographyFileRecord &src)
     {
@@ -24,6 +24,10 @@ struct HolographyFileRecord
     {
         memcpy(this, src, sizeof(HolographyFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(HolographyFileRecord));
     }
 };
 #pragma pack(pop)

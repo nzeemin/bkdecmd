@@ -6,14 +6,14 @@
 constexpr auto BLOCK_SIZE = 512;
 
 CBKImgFile::CBKImgFile()
-    : m_f(nullptr)
-    , m_nCylinders(83), m_nHeads(2), m_nSectors(10)
+    : m_nCylinders(83), m_nHeads(2), m_nSectors(10)
+    , m_f(nullptr)
 {
 }
 
 CBKImgFile::CBKImgFile(const std::wstring &strName, const bool bWrite)
-    : m_f(nullptr)
-    , m_nCylinders(83), m_nHeads(2), m_nSectors(10)
+    : m_nCylinders(83), m_nHeads(2), m_nSectors(10)
+    , m_f(nullptr)
 {
     Open(strName, bWrite);
 }
@@ -25,10 +25,6 @@ CBKImgFile::~CBKImgFile()
 
 bool CBKImgFile::Open(const fs::path &pathName, const bool bWrite)
 {
-    bool bNeedFDRaw = false;
-    bool bFloppy = false; // флаг, true - обращение к реальному флопику, false - к образу
-    bool bFDRaw = false;
-
     std::wstring strName = pathName.wstring();
 
     // сперва проверим, что за имя входного файла

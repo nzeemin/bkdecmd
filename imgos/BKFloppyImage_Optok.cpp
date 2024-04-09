@@ -6,9 +6,9 @@
 
 CBKFloppyImage_Optok::CBKFloppyImage_Optok(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)
+    , m_pDiskCat(nullptr)
     , m_nRecsNum(0)
     , m_nFreeBlock(0)
-    , m_pDiskCat(nullptr)
 {
     m_pFoppyImgFile.SetGeometry(0xff, 0xff, 9); // задаём 9 секторов на дорожке
     m_bMakeAdd    = true;
@@ -82,7 +82,7 @@ void CBKFloppyImage_Optok::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = OPTOK_REC_SIZE;
-            memset(pRec, 0, OPTOK_REC_SIZE);
+            pRec->clear();
         }
 
         std::wstring strName = strUtil::CropStr(pFR->strName.wstring(), 16);
@@ -171,7 +171,7 @@ bool CBKFloppyImage_Optok::ReadCurrentDir()
     auto pOptokRec = reinterpret_cast<OptokFileRecord *>(AFR.pSpecificData); // а в ней копия оригинальной записи
     int used_size = 0;
 
-    for (int i = 1; i < OPTOK_CAT_SIZE / OPTOK_REC_SIZE; ++i) // самую первую запись игнорируем, это служебная область
+    for (size_t i = 1; i < OPTOK_CAT_SIZE / OPTOK_REC_SIZE; ++i) // самую первую запись игнорируем, это служебная область
     {
         m_nRecsNum++;   // будем считать количество записей а не файлов на диске.
         // проверка на конец каталога - будем считать что вся запись полностью из нулей
@@ -179,9 +179,9 @@ bool CBKFloppyImage_Optok::ReadCurrentDir()
             auto pRec = reinterpret_cast<uint8_t *>(&m_pDiskCat[i]); // обратно в байты
             int s = 0;
 
-            for (int i = 0; i < OPTOK_REC_SIZE; ++i)
+            for (size_t j = 0; j < OPTOK_REC_SIZE; ++j)
             {
-                s += pRec[i];
+                s += pRec[j];
             }
 
             if (s == 0)

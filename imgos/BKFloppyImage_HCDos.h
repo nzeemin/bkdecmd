@@ -16,7 +16,7 @@ struct NCdosFileRecord
 
     NCdosFileRecord()
     {
-        memset(this, 0, sizeof(NCdosFileRecord));
+        clear();
     }
     NCdosFileRecord &operator = (const NCdosFileRecord &src)
     {
@@ -27,6 +27,10 @@ struct NCdosFileRecord
     {
         memcpy(this, src, sizeof(NCdosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(NCdosFileRecord));
     }
 };
 #pragma pack(pop)

@@ -37,7 +37,7 @@ void СBKFloppyImage_DaleOS::ConvertAbstractToRealRecord(BKDirDataItem *pFR, boo
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = DALE_REC_SIZE;
-            memset(pRec, 0, DALE_REC_SIZE);
+            pRec->clear();
         }
 
         std::wstring strName = strUtil::CropStr(pFR->strName.wstring(), 16);
@@ -195,7 +195,7 @@ for (auto & p : m_DaleCatalog)
     {
         AFR.clear();
         AFR.nSpecificDataLength = DALE_REC_SIZE;
-        memcpy(pRec, std::addressof(p), DALE_REC_SIZE);
+        *pRec = p;
         ConvertRealToAbstractRecord(&AFR);
         m_sDiskCat.vecFC.push_back(AFR);
     }

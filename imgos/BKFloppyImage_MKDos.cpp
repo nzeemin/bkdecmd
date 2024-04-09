@@ -99,7 +99,7 @@ void CBKFloppyImage_MKDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(MKDosFileRecord);
-            memset(pRec, 0, sizeof(MKDosFileRecord));
+            pRec->clear();
         }
 
         // надо сформировать мкдосную запись из абстрактной
@@ -970,7 +970,7 @@ bool CBKFloppyImage_MKDos::Squeeze()
                     n++;
                 }
 
-                memset(&m_pDiskCat[m_nMKLastCatRecord--], 0, sizeof(MKDosFileRecord));
+                m_pDiskCat[m_nMKLastCatRecord--].clear();
                 continue; // и всё сначала
             }
 
@@ -1062,7 +1062,7 @@ bool CBKFloppyImage_MKDos::OptimizeCatalog()
                     n++;
                 }
 
-                memset(&m_pDiskCat[m_nMKLastCatRecord--], 0, sizeof(MKDosFileRecord));
+                m_pDiskCat[m_nMKLastCatRecord--].clear();
                 continue; // и всё сначала
             }
         }

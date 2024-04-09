@@ -12,9 +12,10 @@ struct MicrodosFileRecord
     uint16_t    len_blk;    // длина в блоках, если len_blk == 0 то это тоже с большой долей вероятности каталог
     uint16_t    address;    // стартовый адрес
     uint16_t    length;     // длина, или остаток длины от длины в блоках, если размер файла > 64кб
+
     MicrodosFileRecord()
     {
-        memset(this, 0, sizeof(MicrodosFileRecord));
+        clear();
     }
     MicrodosFileRecord &operator = (const MicrodosFileRecord &src)
     {
@@ -25,6 +26,10 @@ struct MicrodosFileRecord
     {
         memcpy(this, src, sizeof(MicrodosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(MicrodosFileRecord));
     }
 };
 #pragma pack(pop)

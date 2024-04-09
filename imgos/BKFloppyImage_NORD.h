@@ -12,9 +12,10 @@ struct NordFileRecord
     uint16_t    len_blk;    // длина в блоках
     uint16_t    address;    // стартовый адрес
     uint16_t    length;     // длина
+
     NordFileRecord()
     {
-        memset(this, 0, sizeof(NordFileRecord));
+        clear();
     }
     NordFileRecord &operator = (const NordFileRecord &src)
     {
@@ -25,6 +26,10 @@ struct NordFileRecord
     {
         memcpy(this, src, sizeof(NordFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(NordFileRecord));
     }
 };
 #pragma pack(pop)

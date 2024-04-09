@@ -71,7 +71,7 @@ void CBKFloppyImage_Holography::ConvertAbstractToRealRecord(BKDirDataItem *pFR, 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = HOLO_REC_SIZE;
-            memset(pRec, 0, HOLO_REC_SIZE);
+            pRec->clear();
         }
 
         std::wstring strName = strUtil::CropStr(pFR->strName.wstring(), 16);

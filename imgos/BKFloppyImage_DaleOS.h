@@ -15,7 +15,7 @@ struct DaleOSFileRecord
 
     DaleOSFileRecord()
     {
-        memset(this, 0, sizeof(DaleOSFileRecord));
+        clear();
     }
     DaleOSFileRecord &operator = (const DaleOSFileRecord &src)
     {
@@ -26,6 +26,10 @@ struct DaleOSFileRecord
     {
         memcpy(this, src, sizeof(DaleOSFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(DaleOSFileRecord));
     }
 };
 #pragma pack(pop)

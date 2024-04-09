@@ -8,9 +8,9 @@
 
 CBKFloppyImage_HCDos::CBKFloppyImage_HCDos(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)
-    , m_nFilesNum(0)
     , m_pDiskCat(nullptr)
     , m_pDiskMap(nullptr)
+    , m_nFilesNum(0)
 {
     m_pKoi8tbl = imgUtil::koi8tbl11M;
     m_nBlockSize = 1024;
@@ -25,7 +25,6 @@ CBKFloppyImage_HCDos::CBKFloppyImage_HCDos(const PARSE_RESULT &image)
     m_bMakeRename = true;
     m_bChangeAddr = true;
 }
-
 
 CBKFloppyImage_HCDos::~CBKFloppyImage_HCDos()
 {
@@ -67,7 +66,7 @@ void CBKFloppyImage_HCDos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(NCdosFileRecord);
-            memset(pRec, 0, sizeof(NCdosFileRecord));
+            pRec->clear();
         }
 
         // теперь сформируем HCшную запись из абстрактной
@@ -326,7 +325,7 @@ bool CBKFloppyImage_HCDos::WriteFile(BKDirDataItem *pFR, uint8_t *pBuffer, bool 
     // попадая сюда, мы гарантированно имеем в конце каталога свободное место, там и создадим запись
     nIndex = m_nFilesNum; // это номер нашего добавляемого файла
     m_pDiskCat[m_nFilesNum - 1] = *pRec;
-    memset(&m_pDiskCat[m_nFilesNum++], 0, sizeof(NCdosFileRecord)); // на всякий случай - обозначим конец каталога
+    m_pDiskCat[m_nFilesNum++].clear(); // на всякий случай - обозначим конец каталога
     // теперь сохраним файл
     int nCurBlock = GetFreeBlock(0);
 
@@ -435,7 +434,7 @@ bool CBKFloppyImage_HCDos::DeleteFile(BKDirDataItem *pFR, bool bForce)
                 nIndex++;
             }
 
-            memset(&m_pDiskCat[nIndex], 0, sizeof(NCdosFileRecord));
+            m_pDiskCat[nIndex].clear();
             m_nFilesNum--;
             bRet = WriteCurrentDir(); // сохраним директорию
             m_sDiskCat.nFreeRecs++;

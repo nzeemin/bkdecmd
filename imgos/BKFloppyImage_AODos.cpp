@@ -112,7 +112,7 @@ void CBKFloppyImage_AODos::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool 
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(AodosFileRecord);
-            memset(pRec, 0, sizeof(AodosFileRecord));
+            pRec->clear();
         }
 
         // надо сформировать мкдосную запись из абстрактной
@@ -1030,7 +1030,7 @@ bool CBKFloppyImage_AODos::Squeeze()
                     n++;
                 }
 
-                memset(&m_pDiskCat[m_nMKLastCatRecord--], 0, sizeof(AodosFileRecord));
+                m_pDiskCat[m_nMKLastCatRecord--].clear();
                 continue; // и всё сначала
             }
 

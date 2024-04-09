@@ -13,9 +13,10 @@ struct AodosFileRecord
     uint16_t    len_blk;   // длина в блоках, если 0, то это признак подкаталога
     uint16_t    address;   // стартовый адрес
     uint16_t    length;    // длина
+
     AodosFileRecord()
     {
-        memset(this, 0, sizeof(AodosFileRecord));
+        clear();
     }
     AodosFileRecord &operator = (const AodosFileRecord &src)
     {
@@ -26,6 +27,10 @@ struct AodosFileRecord
     {
         memcpy(this, src, sizeof(AodosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(AodosFileRecord));
     }
 };
 #pragma pack(pop)

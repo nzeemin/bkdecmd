@@ -12,9 +12,10 @@ struct MKDosFileRecord
     uint16_t    len_blk;    // длина в блоках
     uint16_t    address;    // стартовый адрес
     uint16_t    length;     // длина
+
     MKDosFileRecord()
     {
-        memset(this, 0, sizeof(MKDosFileRecord));
+        clear();
     }
     MKDosFileRecord &operator = (const MKDosFileRecord &src)
     {
@@ -25,6 +26,10 @@ struct MKDosFileRecord
     {
         memcpy(this, src, sizeof(MKDosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset(this, 0, sizeof(MKDosFileRecord));
     }
 };
 #pragma pack(pop)

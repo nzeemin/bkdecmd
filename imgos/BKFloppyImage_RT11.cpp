@@ -32,7 +32,6 @@ CBKFloppyImage_RT11::CBKFloppyImage_RT11(const PARSE_RESULT &image)
     m_bMakeRename = true;
 }
 
-
 CBKFloppyImage_RT11::~CBKFloppyImage_RT11()
 {
     m_RT11Catalog.clear();
@@ -221,7 +220,7 @@ bool CBKFloppyImage_RT11::ReadRT11Catalog()
             }
 
             RT11rec.clear();
-            memcpy(&RT11rec, &Segment[5 + i * nRecSizeWord], nSpecificDataLength);
+            memcpy((void*)&RT11rec, &Segment[5 + i * nRecSizeWord], nSpecificDataLength);
             RT11rec.BeginBlock = nStartFileBlock;
             m_RT11Catalog.push_back(RT11rec);
             nStartFileBlock += RT11rec.Record.nBlkSize;
@@ -361,7 +360,7 @@ void CBKFloppyImage_RT11::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool b
         if (!bRenameOnly)
         {
             pFR->nSpecificDataLength = sizeof(RT11FileRecord);
-            memset(pRec, 0, sizeof(RT11FileRecord));
+            pRec->clear();
         }
 
         // теперь сформируем РТ11шную запись из абстрактной
@@ -491,12 +490,12 @@ bool CBKFloppyImage_RT11::ReadCurrentDir()
     int nRecSizeWord = 7 + ((m_nExtraBytes + 1) >> 1);      // размер записи в словах, предполагается, что количество дополнительных слов везде одинаково
     int nSpecificDataLength = nRecSizeWord * 2; // размер записи в байтах
 
-for (auto & p : m_RT11Catalog)
+    for (auto & p : m_RT11Catalog)
     {
         AFR.clear();
         AFR.nSpecificDataLength = nSpecificDataLength;
         // тут как-то не очень эффективно. мы храним копию записи в абстрактной записи.
-        memcpy(pRT11Record, std::addressof(p), nSpecificDataLength);
+        memcpy((void*)pRT11Record, std::addressof(p), nSpecificDataLength);
         ConvertRealToAbstractRecord(&AFR); // здесь блок начала файла не вычисляется, т.к. его нет в записи о файле
         nUsedRecords++;
         AFR.nStartBlock = p.BeginBlock;

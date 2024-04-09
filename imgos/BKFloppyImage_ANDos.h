@@ -25,19 +25,24 @@ struct AndosFileRecord
     uint16_t    date;
     uint16_t    first_cluster;
     uint32_t    length;
+
     AndosFileRecord()
     {
-        memset(this, 0, sizeof(AndosFileRecord));
+        clear();
     }
     AndosFileRecord &operator = (const AndosFileRecord &src)
     {
-        memcpy(this, &src, sizeof(AndosFileRecord));
+        memcpy((void*)this, &src, sizeof(AndosFileRecord));
         return *this;
     }
     AndosFileRecord &operator = (const AndosFileRecord *src)
     {
-        memcpy(this, src, sizeof(AndosFileRecord));
+        memcpy((void*)this, src, sizeof(AndosFileRecord));
         return *this;
+    }
+    void clear()
+    {
+        memset((void*)this, 0, sizeof(AndosFileRecord));
     }
 };
 #pragma pack(pop)

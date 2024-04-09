@@ -4,7 +4,6 @@
 
 #include <ctime>
 
-#pragma warning(disable:4996)
 
 CBKFloppyImage_HCDos::CBKFloppyImage_HCDos(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)

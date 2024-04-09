@@ -4,7 +4,6 @@
 
 #include <ctime>
 
-#pragma warning(disable:4996)
 
 // атрибуты файла
 constexpr auto FAT_ENTRY_ATTR_READONLY = 0x01;
@@ -1023,7 +1022,6 @@ bool CBKFloppyImage_ANDos::RenameRecord(BKDirDataItem *pFR)
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_ANDos::DebugOutCatalog(AndosFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

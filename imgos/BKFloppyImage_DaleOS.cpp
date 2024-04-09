@@ -233,7 +233,6 @@ bool СBKFloppyImage_DaleOS::ReadFile(BKDirDataItem *pFR, uint8_t *pBuffer)
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void СBKFloppyImage_DaleOS::DebugOutCatalog()
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

@@ -4,7 +4,6 @@
 
 #include <ctime>
 
-#pragma warning(disable:4996)
 
 const wchar_t CBKFloppyImage_RT11::RADIX50[050] =
 {
@@ -952,7 +951,6 @@ bool CBKFloppyImage_RT11::Squeeze()
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_RT11::DebugOutCatalog()
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

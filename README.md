@@ -1,6 +1,7 @@
 # bkedcmd
 ![Build Status](https://github.com/nzeemin/bkdecmd/actions/workflows/push-matrix.yml/badge.svg?branch=main)
 [![Build status](https://ci.appveyor.com/api/projects/status/o151mhmfhrp69c99?svg=true)](https://ci.appveyor.com/project/nzeemin/bkdecmd)
+[![CodeFactor](https://www.codefactor.io/repository/github/nzeemin/bkdecmd/badge)](https://www.codefactor.io/repository/github/nzeemin/bkdecmd)
 
 BKDEcmd это утилита командной строки, попытка сделать из оконной программы BKDE консольную утилиту, работающую под Windows/Linux/MacOS.
 

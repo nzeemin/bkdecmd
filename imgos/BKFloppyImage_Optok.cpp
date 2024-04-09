@@ -2,7 +2,6 @@
 #include "BKFloppyImage_Optok.h"
 #include "../StringUtil.h"
 
-#pragma warning(disable:4996)
 
 CBKFloppyImage_Optok::CBKFloppyImage_Optok(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)
@@ -532,7 +531,6 @@ bool CBKFloppyImage_Optok::Squeeze()
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_Optok::DebugOutCatalog(OptokFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

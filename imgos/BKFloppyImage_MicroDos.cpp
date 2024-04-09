@@ -668,7 +668,6 @@ bool CBKFloppyImage_MicroDos::Squeeze()
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_MicroDos::DebugOutCatalog(MicrodosFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

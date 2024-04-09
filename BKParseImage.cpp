@@ -3,7 +3,6 @@
 #include "imgos/BKDRT11Header.h"
 #include "BKParseImage.h"
 
-#pragma warning(disable:4996)
 
 CBKParseImage::CBKParseImage()
     = default;

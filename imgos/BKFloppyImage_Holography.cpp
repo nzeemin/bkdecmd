@@ -2,7 +2,6 @@
 #include "BKFloppyImage_Holography.h"
 #include "../StringUtil.h"
 
-#pragma warning(disable:4996)
 
 CBKFloppyImage_Holography::CBKFloppyImage_Holography(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)
@@ -206,7 +205,6 @@ bool CBKFloppyImage_Holography::ReadFile(BKDirDataItem *pFR, uint8_t *pBuffer)
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_Holography::DebugOutCatalog(HolographyFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

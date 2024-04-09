@@ -1076,7 +1076,6 @@ bool CBKFloppyImage_MKDos::OptimizeCatalog()
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_MKDos::DebugOutCatalog(MKDosFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

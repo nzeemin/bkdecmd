@@ -2,7 +2,6 @@
 #include "BKFloppyImage_Csidos3.h"
 #include "../StringUtil.h"
 
-#pragma warning(disable:4996)
 
 static const int PgNumF2L[8] = { 1, 5, 2, 3, 4, 7, 0, 6 }; // перекодировка БКшной кодировки номеров страниц в нормальную.
 static const int PgNumL2F[8] = { 6, 0, 2, 3, 4, 1, 7, 5 }; // перекодировка логического номера страницы в БКшную реальную
@@ -1270,7 +1269,6 @@ for (auto & p : m_CSICatalog) // пройдёмся по всем записям
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_Csidos3::DebugOutCatalog()
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

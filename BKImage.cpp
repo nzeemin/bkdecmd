@@ -15,8 +15,6 @@
 #include "imgos/BKFloppyImage_DaleOS.h"
 //#include "imgos/BKFloppyImage_MSDOS.h"
 
-#pragma warning(disable:4996)
-
 
 const wchar_t* S_CATALOG_HEADER = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. |";
 const wchar_t* S_CATALOG_SEPARATOR = L"-------------------------|------|------------------------|------|";

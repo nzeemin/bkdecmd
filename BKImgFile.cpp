@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "BKImgFile.h"
 
-#pragma warning(disable:4996)
 
 constexpr auto BLOCK_SIZE = 512;
 

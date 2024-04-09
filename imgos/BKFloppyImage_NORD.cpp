@@ -1170,7 +1170,6 @@ bool CBKFloppyImage_Nord::Squeeze()
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//#pragma warning(disable:4996)
 //void CBKFloppyImage_Nord::DebugOutCatalog(NordFileRecord *pRec)
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);

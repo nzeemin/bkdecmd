@@ -1,7 +1,6 @@
 ﻿#include "../pch.h"
 #include "BKFloppyImage_Prototype.h"
 
-#pragma warning(disable:4996)
 
 CBKFloppyImage_Prototype::CBKFloppyImage_Prototype(const PARSE_RESULT &image)
     : m_pKoi8tbl(imgUtil::koi8tbl10)

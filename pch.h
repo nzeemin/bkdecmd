@@ -40,8 +40,8 @@ namespace fs = std::filesystem;
 #define ASSERT assert
 #define TRACE ((void)0)
 #else
-#define ASSERT ((void)0)
-#define TRACE ((void)0)
+#define ASSERT(condition) ((void)0)
+#define TRACE(something) ((void)0)
 #endif
 
 #endif //PCH_H

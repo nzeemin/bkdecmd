@@ -80,7 +80,7 @@ public:
     {
         return m_sDiskCat.nCurrDirNum;
     }
-    inline const fs::path &GetCurrImgName()
+    inline const fs::path GetCurrImgName()
     {
         return m_sParseImgResult.strName;
     }

@@ -134,6 +134,7 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs)
         return false;
     }
     g_pCommand = pcinfo;
+    std::wcout << L"Команда: " << g_sCommand << std::endl;
 
     // More pre-checks based on command requirements
     if (g_sImageFileName.empty())
@@ -198,7 +199,11 @@ int wmain_impl(std::vector<std::wstring>& wargs)
         return 255;
     }
 
-    std::wcout << L"Команда: " << g_sCommand << std::endl;
+    if (!fs::is_regular_file(g_sImageFileName))
+    {
+        std::wcout << L"Файл образа диска не найден: " << g_sImageFileName << std::endl;
+        return 255;
+    }
     std::wcout << L"Образ диска: " << g_sImageFileName << std::endl;
 
     // Подключение к файлу образа
@@ -237,7 +242,7 @@ int wmain_impl(std::vector<std::wstring>& wargs)
 
     if (result)
         std::wcout << std::endl << L"Done." << std::endl;
-    return 0;
+    return result ? 0 : 255;
 }
 
 
@@ -253,6 +258,8 @@ bool DoDiskList()
 
 bool DoDiskExtractFile()
 {
+    //TODO: Если имя извлекаемого файла указано с '/', то нужно сначала спуститься до заданной директории
+
     return g_BKImage.FindAndExtractFile(g_sFileName);
 }
 
@@ -296,5 +303,7 @@ bool DoDiskAddFile()
 
 bool DoDiskDeleteFile()
 {
+    //TODO: Если имя удаляемого файла указано с '/', то нужно сначала спуститься до заданной директории
+
     return g_BKImage.FindAndDeleteFile(g_sFileName);
 }

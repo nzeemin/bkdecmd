@@ -147,6 +147,9 @@ protected:
     bool ExtractFile(BKDirDataItem* fr);
     bool DeleteRecursive(BKDirDataItem* fr);
     bool AnalyseExportFile(AnalyseFileStruct* a);
-    void SetStorePath(const fs::path& str);
+    void SetStorePath(const fs::path& str)
+    {
+        m_strStorePath = str;
+    }
 
 };

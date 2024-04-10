@@ -160,7 +160,7 @@ void CBKImage::ClearImgVector()
 {
     Close();
 
-for (auto & bkdi : m_vpImages)
+    for (auto & bkdi : m_vpImages)
     {
         bkdi.reset();
     }
@@ -463,20 +463,9 @@ void CBKImage::ItemProcessing(int nItem, BKDirDataItem *fr)
         StepIntoDir(fr); // нужно, чтобы имя логдиска отображалось в пути, при входе в него.
         //AfxGetMainWnd()->SendMessage(WM_PUT_INTO_LD, static_cast<WPARAM>(m_pFloppyImage->GetBaseOffset() + fr->nStartBlock * BLOCK_SIZE), static_cast<LPARAM>(fr->nSize));
     }
-    else
-    {
-        // кликнули на файле, передаём запись файла в просмотрщик.
-        if (m_pFloppyImage->GetImgOSType() == IMAGE_TYPE::RT11)
-        {
-            //ViewFileRT11(fr);
-        }
-        else
-        {
-            //ViewFile(fr); // проверка, файл это или нет, делается внутри.
-        }
-    }
 }
 
+// Спускаемся на уровень вниз, в под-директорию или в логический диск
 void CBKImage::StepIntoDir(BKDirDataItem *fr)
 {
     //if (m_pFloppyImage->ChangeDir(fr))
@@ -497,8 +486,8 @@ void CBKImage::StepIntoDir(BKDirDataItem *fr)
     //}
 }
 
-// выход: true - обычно
-//      false - выход из лог диска или образа
+// Выходим вверх из под-директории или из логического диска
+// Результат: true - выход из под-директории, false - выход из логического диска
 bool CBKImage::StepUptoDir(BKDirDataItem *fr)
 {
     bool bRet = true;
@@ -533,6 +522,7 @@ bool CBKImage::StepUptoDir(BKDirDataItem *fr)
     return bRet;
 }
 
+// Найти и извлечь файл в текущей директории
 bool CBKImage::FindAndExtractFile(std::wstring strFileName)
 {
     auto fr = FindFileRecord(strFileName);
@@ -545,6 +535,7 @@ bool CBKImage::FindAndExtractFile(std::wstring strFileName)
     return ExtractFile(fr);
 }
 
+// Найти и удалить файл в текущей директории
 bool CBKImage::FindAndDeleteFile(std::wstring strFileName)
 {
     auto fr = FindFileRecord(strFileName);
@@ -680,8 +671,8 @@ void CBKImage::DeleteSelected()
 //	}
 }
 
-// рекурсивно удаляем директорию и всё её содержимое
-// на входе - запись удаляемой директории
+// Рекурсивно удаляем директорию и всё её содержимое
+// На входе - запись удаляемой директории
 bool CBKImage::DeleteRecursive(BKDirDataItem *fr)
 {
     bool bRet = true;
@@ -724,11 +715,6 @@ bool CBKImage::DeleteRecursive(BKDirDataItem *fr)
     }
 
     return bRet;
-}
-
-void CBKImage::SetStorePath(const fs::path &str)
-{
-    m_strStorePath = str;
 }
 
 bool CBKImage::ExtractObject(BKDirDataItem *fr)
@@ -793,7 +779,7 @@ bool CBKImage::ExtractObject(BKDirDataItem *fr)
     return bRet;
 }
 
-// процедура извлечения файла
+// Процедура извлечения файла
 bool CBKImage::ExtractFile(BKDirDataItem *fr)
 {
     IMAGE_ERROR nErrorNumber = IMAGE_ERROR::OK_NOERRORS;
@@ -1022,7 +1008,6 @@ bool CBKImage::AnalyseExportFile(AnalyseFileStruct *a)
 
     return bRet;
 }
-
 
 
 // возвращаем коды состояния и ошибок вызывающей функции. Она должна заниматься обработкой
@@ -1329,5 +1314,3 @@ ADDOP_RESULT CBKImage::DeleteObject(BKDirDataItem *fr, bool bForce)
 
     return ret;
 }
-
-

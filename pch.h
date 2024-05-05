@@ -24,12 +24,12 @@
 
 #include <string.h>
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <io.h>
 #include <fcntl.h>
 #endif
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define swprintf _snwprintf
 #endif
 

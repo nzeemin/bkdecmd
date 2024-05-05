@@ -5,6 +5,7 @@
 
 #include "BKParseImage.h"
 #include "BKImage.h"
+#include "StringUtil.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -35,7 +36,9 @@ bool DoDiskDeleteFile();
 
 std::wstring g_sCommand;
 std::wstring g_sImageFileName;
+fs::path g_pathImageFileName;
 std::wstring g_sFileName;
+fs::path g_pathFileName;
 
 enum CommandRequirements
 {
@@ -142,6 +145,12 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs)
         std::wcout << L"Файл образа не указан." << std::endl;
         return false;
     }
+#ifdef _MSC_VER
+    g_pathImageFileName = fs::path(g_sImageFileName);
+#else
+    g_pathImageFileName = fs::path(strUtil::wstringToString(g_sImageFileName));
+#endif
+
     if ((pcinfo->requirements & CMDR_PARAM_FILENAME) != 0 && g_sFileName.empty())
     {
         std::wcout << L"Ожидалось имя файла." << std::endl;
@@ -152,6 +161,15 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs)
     //    std::wcout << L"Cannot perform the operation: disk image file is read-only." << std::endl;
     //    return false;
     //}
+
+    if (!g_sFileName.empty())
+    {
+#ifdef _MSC_VER
+        g_pathFileName = fs::path(g_sFileName);
+#else
+        g_pathFileName = fs::path(strUtil::wstringToString(g_sFileName));
+#endif
+    }
 
     return true;
 }
@@ -174,8 +192,7 @@ int wmain(int argc, wchar_t* argv[])
 int main(int argc, char* argv[])
 {
     // Console output mode
-    std::locale::global(std::locale(""));
-    std::wcout.imbue(std::locale());
+    std::setlocale(LC_ALL, "");
 
     std::vector<std::wstring> wargs;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -199,7 +216,7 @@ int wmain_impl(std::vector<std::wstring>& wargs)
         return 255;
     }
 
-    if (!fs::is_regular_file(g_sImageFileName))
+    if (!fs::is_regular_file(g_pathImageFileName))
     {
         std::wcout << L"Файл образа диска не найден: " << g_sImageFileName << std::endl;
         return 255;
@@ -207,7 +224,7 @@ int wmain_impl(std::vector<std::wstring>& wargs)
     std::wcout << L"Образ диска: " << g_sImageFileName << std::endl;
 
     // Подключение к файлу образа
-    g_sParseResult = g_ParserImage.ParseImage(g_sImageFileName, 0);
+    g_sParseResult = g_ParserImage.ParseImage(g_pathImageFileName, 0);
     if (g_sParseResult.imageOSType == IMAGE_TYPE::ERROR_NOIMAGE)
     {
         std::wcout << L"Какая-то ошибка при чтении файла образа, либо он повреждён, либо недоступен по чтению, из-за блокирования другой программой." << std::endl;

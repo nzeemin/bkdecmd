@@ -295,7 +295,7 @@ void CBKFloppyImage_ANDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             // если каталог
             pFR->nAttr |= FR_ATTR::DIR;
             pFR->nRecType = BKDIR_RECORD_TYPE::DIR;
-            pFR->strName = name;
+            pFR->strName = wstringToFsPath(name);
             pFR->nDirNum = pRec->dir_num;
             pFR->nDirBelong = pRec->parent_dir_num;
             pFR->nBlkSize = 0;
@@ -314,11 +314,11 @@ void CBKFloppyImage_ANDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             std::wstring ext = strUtil::trim(imgUtil::BKToUNICODE(pRec->file.ext, 3, m_pKoi8tbl));
             // если файл
             pFR->nRecType = BKDIR_RECORD_TYPE::FILE;
-            pFR->strName = name;
+            pFR->strName = wstringToFsPath(name);
 
             if (!ext.empty())
             {
-                pFR->strName += L"." + ext;
+                pFR->strName += wstringToFsPath(L"." + ext);
             }
 
             pFR->nDirNum = 0;
@@ -330,9 +330,9 @@ void CBKFloppyImage_ANDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
         if (pRec->filename[0] == 0345)
         {
             pFR->nAttr |= FR_ATTR::DELETED;
-            std::wstring t = pFR->strName.wstring();
+            std::wstring t = fsPathToWstring(pFR->strName);
             t[0] = L'x';
-            pFR->strName = fs::path(t);
+            pFR->strName = fs::path(wstringToFsPath(t));
         }
 
         // теперь скопируем некоторые атрибуты

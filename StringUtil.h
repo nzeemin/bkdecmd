@@ -3,6 +3,9 @@
 
 namespace strUtil
 {
+    // конвертация UTF-16 wstring в UTF-8 string
+    std::string wstringToString(const std::wstring& str);
+    std::wstring stringToWstring(const std::string& str);
     // удаление заданного символа с обоих концов строки
     std::wstring trim(const std::wstring &str, const wchar_t trim_char = L' ');
     // удаление заданного символа в начале строки

@@ -1,11 +1,21 @@
 ﻿#include "pch.h"
 
 #include "StringUtil.h"
-#include <clocale>
 #include <cctype>    // std::tolower
 #include <algorithm> // std::equal
 
 // для работы с std::wstring нет многих стандартных нужных функций.
+
+static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> utfconverter;
+
+std::string strUtil::wstringToString(const std::wstring& str)
+{
+    return utfconverter.to_bytes(str);
+}
+std::wstring strUtil::stringToWstring(const std::string& str)
+{
+    return utfconverter.from_bytes(str.c_str());
+}
 
 std::wstring strUtil::trim(const std::wstring &str, const wchar_t trim_char)
 {

@@ -1,6 +1,11 @@
 ﻿#pragma once
 #include "BKImgFile.h"
 
+
+fs::path wstringToFsPath(std::wstring str);
+std::wstring fsPathToWstring(fs::path& path);
+
+
 enum class IMAGE_TYPE : int
 {
     ERROR_NOIMAGE = -1,

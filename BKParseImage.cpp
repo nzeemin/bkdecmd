@@ -2,6 +2,25 @@
 
 #include "imgos/BKDRT11Header.h"
 #include "BKParseImage.h"
+#include "StringUtil.h"
+
+
+fs::path wstringToFsPath(std::wstring str)
+{
+#ifdef _MSC_VER
+    return fs:path(str.c_str());
+#else
+    return fs::path(strUtil::wstringToString(str));
+#endif
+}
+std::wstring fsPathToWstring(fs::path& path)
+{
+#ifdef _MSC_VER
+    return path.wstring();
+#else
+    return strUtil::stringToWstring(path.c_str());
+#endif
+}
 
 
 CBKParseImage::CBKParseImage()

@@ -231,7 +231,7 @@ bool CBKImage::PrintCurrentDir(CBKImage::ItemPanePos pp)
 
     for (auto & fr : *pLS)
     {
-        std::wstring str = fr.strName.wstring();
+        std::wstring str = fsPathToWstring(fr.strName);
         strUtil::trim(str, L'\"');  //TODO разобраться откуда там вообще кавычки
         std::wcout << std::setfill(L' ') << std::setw(24) << std::left << str << L" | ";
 

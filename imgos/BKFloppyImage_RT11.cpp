@@ -48,7 +48,7 @@ const std::wstring CBKFloppyImage_RT11::GetSpecificData(BKDirDataItem *fr) const
     if (nDay != 0 && nMon != 0)
     {
         // если день != 0 и месяц != 0, то будем считать, что поле даты верно.
-        strDate = imgUtil::string_format(L"%4d-%02d-%02d", nYear, nMon, nDay);
+        strDate = imgUtil::string_format(L"%04d-%02d-%02d", nYear, nMon, nDay);
     }
 
     return strDate;
@@ -99,7 +99,7 @@ int CBKFloppyImage_RT11::EncodeRadix50(uint16_t *buf, int len, std::wstring &str
         buf[i] = 0;
     }
 
-for (auto ch : strSrc)
+    for (auto ch : strSrc)
     {
         // теперь поищем символ в таблице
         uint16_t nChCode = 0;   // код текущего символа по умолчанию, если символ не будет найден в таблице, будет значение по умолчанию
@@ -256,7 +256,7 @@ bool CBKFloppyImage_RT11::WriteRT11Catalog()
     uint16_t nFileBlock = m_nBeginBlock + m_nTotalSegments * 2; // это будет начальный блок сегмента
     bool bBeginPrepare = true; // флаг, что надо подготовить новый сегмент
 
-for (auto & p : m_RT11Catalog)
+    for (auto & p : m_RT11Catalog)
     {
         if (bBeginPrepare)
         {

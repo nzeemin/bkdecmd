@@ -191,7 +191,7 @@ bool СBKFloppyImage_DaleOS::ReadCurrentDir()
     BKDirDataItem AFR;
     auto pRec = reinterpret_cast<DaleOSFileRecord *>(AFR.pSpecificData);
 
-for (auto & p : m_DaleCatalog)
+    for (auto & p : m_DaleCatalog)
     {
         AFR.clear();
         AFR.nSpecificDataLength = DALE_REC_SIZE;

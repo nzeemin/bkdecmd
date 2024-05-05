@@ -16,7 +16,6 @@ CBKFloppyImage_Csidos3::CBKFloppyImage_Csidos3(const PARSE_RESULT &image)
     m_bChangeAddr = true;
 }
 
-
 CBKFloppyImage_Csidos3::~CBKFloppyImage_Csidos3()
 {
     m_CSICatalog.clear();
@@ -37,7 +36,6 @@ const std::wstring CBKFloppyImage_Csidos3::GetSpecificData(BKDirDataItem *fr) co
 
     return str;
 }
-
 
 void CBKFloppyImage_Csidos3::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool bRenameOnly)
 {
@@ -365,7 +363,7 @@ bool CBKFloppyImage_Csidos3::WriteCSICatalog()
     auto CSIHdr = reinterpret_cast<CsidosCatHeader *>(m_nSector);
     auto CSICat = reinterpret_cast<CsidosFileRecord *>(m_nSector + 12);
 
-for (auto & p : m_CSICatalog)
+    for (auto & p : m_CSICatalog)
     {
         if (bBeginPrepare)
         {
@@ -433,7 +431,7 @@ bool CBKFloppyImage_Csidos3::ReadCurrentDir()
     BKDirDataItem AFR;
     auto pRec = reinterpret_cast<CsidosFileRecord *>(AFR.pSpecificData);
 
-for (auto & p : m_CSICatalog)
+    for (auto & p : m_CSICatalog)
     {
         if (p.type == 0376)
         {
@@ -1227,7 +1225,7 @@ bool CBKFloppyImage_Csidos3::Squeeze()
     int nUSedBlocks = 0;
     int nCurrBlock = 012;
 
-for (auto & p : m_CSICatalog) // пройдёмся по всем записям
+    for (auto & p : m_CSICatalog) // пройдёмся по всем записям
     {
         if ((*(reinterpret_cast<uint16_t *>(p.name + 8)) == 0) && (p.start_block == 0))
         {

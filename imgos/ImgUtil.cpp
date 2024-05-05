@@ -216,7 +216,7 @@ void imgUtil::UNICODEtoBK(const std::wstring &ustr, uint8_t *pBuff, const size_t
     uint8_t b;
     size_t bn = 0;
 
-for (auto ch : ustr)
+    for (auto ch : ustr)
     {
         if (ch < 32) // если символ меньше пробела,
         {
@@ -288,7 +288,7 @@ std::wstring imgUtil::SetSafeName(const std::wstring &str)
     res = strUtil::replaceChars(res, std::wstring(L":?\\/"), rch);
 
     // а теперь заменим все символы с кодом меньше 32
-for (auto & wch : res)
+    for (auto & wch : res)
     {
         if (wch < 32)
         {

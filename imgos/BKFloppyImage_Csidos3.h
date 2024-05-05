@@ -103,7 +103,7 @@ public:
     // виртуальные функции
     virtual std::wstring HasSpecificData() const override
     {
-        return L"Тип БК;стр0:стр1";
+        return L"Тип БК; стр0:стр1";
     }
     virtual const std::wstring GetSpecificData(BKDirDataItem *fr) const override;
 

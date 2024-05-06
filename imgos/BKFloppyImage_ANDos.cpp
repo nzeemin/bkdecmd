@@ -436,7 +436,7 @@ const std::wstring CBKFloppyImage_ANDos::GetImageInfo() const
         auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
         unsigned int bytes = freeblocks * m_nClusterSize;
         unsigned int totalbytes = totalblocks * m_nClusterSize;
-        return imgUtil::string_format(strf, freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
+        return imgUtil::string_format(strf.c_str(), freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
                 static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
                 freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)].c_str(),
                 bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)].c_str(),

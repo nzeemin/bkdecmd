@@ -57,7 +57,7 @@ const std::wstring CBKFloppyImage_Prototype::GetImageInfo() const
         auto totalblocks = static_cast<unsigned int>(m_sDiskCat.nTotalBlocks);
         unsigned int totalbytes = totalblocks * m_nBlockSize;
         auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
-        return imgUtil::string_format(strf, freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
+        return imgUtil::string_format(strf.c_str(), freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
                 static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
                 freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)].c_str(),
                 bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)].c_str(),

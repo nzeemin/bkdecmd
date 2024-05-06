@@ -153,18 +153,17 @@ namespace imgUtil
 
 
     template<typename ... Args>
-    std::wstring string_format(const std::wstring &format, Args ... args)
+    std::wstring string_format(const wchar_t* format, Args ... args)
     {
-        size_t size = swprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-
+        const size_t bufsize = 512;
+        auto buf = std::vector<wchar_t>(bufsize);
+        int size = std::swprintf(buf.data(), bufsize, format, args ...);
         if (size <= 0)
         {
             throw std::runtime_error("Error during formatting.");
         }
 
-        auto buf = std::vector<wchar_t>(size);
-        swprintf(buf.data(), size, format.c_str(), args ...);
-        return std::wstring(buf.data(), buf.data() + size - 1); // We don't want the '\0' inside
+        return std::wstring(buf.data(), buf.data() + size); // We don't want the '\0' inside
     }
 
     // получение строки из ресурсов. платформо- и системозависимая функция

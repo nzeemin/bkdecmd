@@ -8,7 +8,7 @@
 fs::path wstringToFsPath(std::wstring str)
 {
 #ifdef _MSC_VER
-    return fs:path(str.c_str());
+    return fs::path(str.c_str());
 #else
     return fs::path(strUtil::wstringToString(str));
 #endif

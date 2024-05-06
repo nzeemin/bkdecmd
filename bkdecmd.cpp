@@ -174,7 +174,7 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs)
     return true;
 }
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 int wmain(int argc, wchar_t* argv[])
 {
     // Console output mode

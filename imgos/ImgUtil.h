@@ -157,7 +157,7 @@ namespace imgUtil
     {
         const size_t bufsize = 512;
         auto buf = std::vector<wchar_t>(bufsize);
-        int size = std::swprintf(buf.data(), bufsize, format, args ...);
+        int size = swprintf(buf.data(), bufsize, format, args ...);
         if (size <= 0)
         {
             throw std::runtime_error("Error during formatting.");

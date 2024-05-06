@@ -380,7 +380,7 @@ void CBKFloppyImage_RT11::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool b
         {
             pRec->nBlkSize = ByteSizeToBlockSize_l(pFR->nSize); // размер проги в блоках
             tm ctm {};
-#ifdef _WIN32
+#ifdef _MSC_VER
             gmtime_s(&ctm, &pFR->timeCreation);
 #else
             gmtime_r(&pFR->timeCreation, &ctm);

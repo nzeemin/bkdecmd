@@ -36,3 +36,11 @@ jobs:
         CXX: ${{ matrix.config.cxx }}
       run: |
         make
+        chmod +x ./bkdecmd
+
+    - name: Test
+      run: |
+        ./bkdecmd
+        ./bkdecmd l ./images/ANDOS330.IMG
+        ./bkdecmd l ./images/BK_SYS.DSK
+        ./bkdecmd l ./images/CSIDOS.IMG

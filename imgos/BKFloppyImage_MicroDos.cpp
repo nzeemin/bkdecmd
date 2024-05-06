@@ -141,7 +141,7 @@ void CBKFloppyImage_MicroDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             name += ext;
         }
 
-        pFR->strName = name;
+        pFR->strName = wstringToFsPath(name);
         pFR->nDirBelong = pRec->stat1;
         pFR->nDirNum = 0;
         pFR->nBlkSize = pRec->len_blk;

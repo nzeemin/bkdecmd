@@ -398,7 +398,7 @@ void CBKFloppyImage_RT11::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
     // преобразовываем, только если есть реальные данные
     if (pFR->nSpecificDataLength)
     {
-        pFR->strName = strUtil::trim(DecodeRadix50(pRec->FileName, 2));
+        pFR->strName = wstringToFsPath(strUtil::trim(DecodeRadix50(pRec->FileName, 2)));
         std::wstring ext = strUtil::trim(DecodeRadix50(&(pRec->FileExt), 1));
 
         if (!ext.empty())
@@ -408,7 +408,7 @@ void CBKFloppyImage_RT11::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
 
         if (pFR->strName.empty())
         {
-            pFR->strName = L"empty.fil";
+            pFR->strName = wstringToFsPath(L"empty.fil");
         }
 
         // разберёмся с атрибутами.
@@ -430,9 +430,9 @@ void CBKFloppyImage_RT11::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
         if (pRec->nStatus & RT11_FILESTATUS_UNUSED)
         {
             pFR->nAttr |= FR_ATTR::DELETED;
-            std::wstring t = pFR->strName.wstring();
+            std::wstring t = fsPathToWstring(pFR->strName);
             t[0] = L'x';
-            pFR->strName = fs::path(t);
+            pFR->strName = wstringToFsPath(t);
         }
 
         if (ext == L"DSK")

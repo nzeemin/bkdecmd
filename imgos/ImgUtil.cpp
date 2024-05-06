@@ -137,7 +137,6 @@ const wchar_t imgUtil::koi8tbl10[128] =
 };
 
 
-
 // получим номер окончания слова в зависимости от числа num (предполагаем, что нет отрицательных чисел)
 uint32_t imgUtil::GetWordEndIdx(uint32_t num)
 {

@@ -88,7 +88,7 @@ void CBKFloppyImage_Holography::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
 
     if (pFR->nSpecificDataLength) // преобразовываем, только если есть реальные данные
     {
-        pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl));
+        pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl)));
         pFR->nAttr = 0;
         pFR->nRecType = BKDIR_RECORD_TYPE::FILE;
         pFR->nDirBelong = 0;

@@ -115,13 +115,13 @@ void CBKFloppyImage_HCDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
     {
         if (pRec->ext[0] == '.') // если есть расширение
         {
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 12, m_pKoi8tbl));
+            pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 12, m_pKoi8tbl)));
             std::wstring ext = strUtil::trim(imgUtil::BKToUNICODE(pRec->ext, 4, m_pKoi8tbl));
             pFR->strName += ext;
         }
         else
         {
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl));
+            pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl)));
         }
 
         pFR->nRecType = BKDIR_RECORD_TYPE::FILE;

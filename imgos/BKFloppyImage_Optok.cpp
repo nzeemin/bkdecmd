@@ -118,11 +118,11 @@ void CBKFloppyImage_Optok::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
         if (pRec->status == 0)
         {
             pFR->nAttr |= FR_ATTR::DELETED;
-            pFR->strName = L"<DELETED>";
+            pFR->strName = wstringToFsPath(L"<DELETED>");
         }
         else
         {
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl));
+            pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl)));
         }
 
         if (pRec->masks & 1)

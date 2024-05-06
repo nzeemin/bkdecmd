@@ -93,7 +93,7 @@ void СBKFloppyImage_DaleOS::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             pFR->nAttr |= FR_ATTR::SYSTEM;
         }
 
-        pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl));
+        pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 16, m_pKoi8tbl)));
         pFR->nDirBelong = 0;
         pFR->nDirNum = 0;
         pFR->nAddress = pRec->address;

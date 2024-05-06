@@ -195,7 +195,7 @@ void CBKFloppyImage_AODos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             // если директория
             pFR->nAttr |= FR_ATTR::DIR;
             pFR->nRecType = BKDIR_RECORD_TYPE::DIR;
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 14, m_pKoi8tbl));
+            pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 14, m_pKoi8tbl)));
             pFR->nDirBelong = pRec->status2 & 0177;
             pFR->nDirNum = pRec->status1 & 0177;
             pFR->nBlkSize = 0;
@@ -230,7 +230,7 @@ void CBKFloppyImage_AODos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
                 name += ext;
             }
 
-            pFR->strName = name;
+            pFR->strName = wstringToFsPath(name);
             pFR->nDirBelong = pRec->status2 & 0177;
             pFR->nDirNum = 0;
             pFR->nBlkSize = pRec->len_blk;

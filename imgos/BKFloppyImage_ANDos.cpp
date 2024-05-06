@@ -332,7 +332,7 @@ void CBKFloppyImage_ANDos::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             pFR->nAttr |= FR_ATTR::DELETED;
             std::wstring t = fsPathToWstring(pFR->strName);
             t[0] = L'x';
-            pFR->strName = fs::path(wstringToFsPath(t));
+            pFR->strName = wstringToFsPath(t);
         }
 
         // теперь скопируем некоторые атрибуты

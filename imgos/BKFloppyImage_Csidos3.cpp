@@ -154,7 +154,7 @@ void CBKFloppyImage_Csidos3::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
             // обрабатываем директорию
             pFR->nAttr |= FR_ATTR::DIR;
             pFR->nRecType = BKDIR_RECORD_TYPE::DIR;
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 8, m_pKoi8tbl));
+            pFR->strName = wstringToFsPath(strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 8, m_pKoi8tbl)));
             pFR->nDirNum = pRec->status - 1;
             pFR->nBlkSize = 0;
             // в поле времени будем хранить статус файла
@@ -171,13 +171,14 @@ void CBKFloppyImage_Csidos3::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
         {
             // обрабатываем файл
             pFR->nRecType = BKDIR_RECORD_TYPE::FILE;
-            pFR->strName = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 8, m_pKoi8tbl));
-            std::wstring ext = strUtil::trim(imgUtil::BKToUNICODE(pRec->name + 8, 3, m_pKoi8tbl));
 
+            std::wstring filename = strUtil::trim(imgUtil::BKToUNICODE(pRec->name, 8, m_pKoi8tbl));
+            std::wstring ext = strUtil::trim(imgUtil::BKToUNICODE(pRec->name + 8, 3, m_pKoi8tbl));
             if (!ext.empty())
             {
-                pFR->strName += L"." + ext;
+                filename += L"." + ext;
             }
+            pFR->strName = wstringToFsPath(filename);
 
             pFR->nDirNum = 0;
             // в поле времени будем хранить статус файла
@@ -593,7 +594,7 @@ bool CBKFloppyImage_Csidos3::WriteFile(BKDirDataItem *pFR, uint8_t *pBuffer, boo
         {
             std::wstring sext = ext.substr(t + 1); // выделим предполагаемые номера страниц
             ext = ext.substr(0, t); // отрежем от расширения эту фигню
-            pFR->strName = name + ext;
+            pFR->strName = wstringToFsPath(name + ext);
 
             // разбор делаем самым примитивным способом
             if ((L'0' <= sext[0]) && (sext[0] <= L'7'))

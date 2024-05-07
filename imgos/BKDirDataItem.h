@@ -52,6 +52,8 @@ public:
     }
     ~BKDirDataItem() = default;
 
+    bool IsDirectory() const { return (nAttr & FR_ATTR::DIR) != 0 && (nAttr & FR_ATTR::LINK) == 0; }
+
     void clear()
     {
         this->strName.clear();

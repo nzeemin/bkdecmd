@@ -23,6 +23,7 @@ enum class ADD_ERROR : int
 
 extern std::wstring g_AddOpErrorStr[];
 
+// Результат операции добавления объекта
 struct ADDOP_RESULT
 {
     bool            bFatal;     // флаг необходимости прервать работу.
@@ -42,17 +43,16 @@ struct ADDOP_RESULT
 
 class CBKImage
 {
-    fs::path                m_strStorePath;     // путь, куда будем сохранять файлы
-
-    PaneInfo                m_PaneInfo;
-    std::vector<PaneInfo>   m_vSelItems;
-
-    std::unique_ptr<CBKFloppyImage_Prototype> m_pFloppyImage;
-    std::vector<std::unique_ptr<CBKFloppyImage_Prototype>> m_vpImages; // тут будут храниться объекты, когда мы заходим в лог.диски
-
+    fs::path m_strStorePath;        // путь, куда будем сохранять файлы
     bool m_bCheckUseBinStatus;      // состояние чекбоксов "использовать формат бин"
     bool m_bCheckUseLongBinStatus;  // состояние чекбоксов "использовать формат бин"
     bool m_bCheckLogExtractStatus;  // и "создавать лог извлечения" соответственно, проще их тут хранить, чем запрашивать сложными путями у родителя
+
+    std::unique_ptr<CBKFloppyImage_Prototype> m_pFloppyImage;
+
+    //PaneInfo                m_PaneInfo;  //TODO: Убрать
+    std::vector<PaneInfo>   m_vSelItems;  //TODO: Убрать
+    std::vector<std::unique_ptr<CBKFloppyImage_Prototype>> m_vpImages; // Стек образов дисков, для захода в логические диски
 
 public:
     CBKImage();
@@ -61,7 +61,7 @@ public:
     uint32_t Open(PARSE_RESULT &pr, const bool bLogDisk = false); // открыть файл по результатам парсинга
     uint32_t ReOpen(); // переинициализация уже открытого образа
     void Close(); // закрыть текущий файл
-    const std::wstring GetImgFormatName(IMAGE_TYPE nType = IMAGE_TYPE::UNKNOWN);
+    std::wstring GetImgFormatName(IMAGE_TYPE nType = IMAGE_TYPE::UNKNOWN);
     void ClearImgVector();
     void PushCurrentImg();
     bool PopCurrentImg();
@@ -111,8 +111,10 @@ public:
         m_bCheckLogExtractStatus = bStatus;
     }
 
-    // Выдать на печать текущую директорию
-    bool PrintCurrentDir(CBKImage::ItemPanePos pp);
+    // Выдать на печать текущую директорию;
+    // при level == 0 печатает заголовок и концевик таблицы;
+    // при recursive вызывается рекурсивно для под-директорий
+    bool PrintCurrentDirectory(const int level = 0, const bool recursive = false);
 
     // Найти объект (файл/директория) по имени в текущей директории
     BKDirDataItem* FindRecordByName(std::wstring strName);
@@ -129,17 +131,23 @@ public:
     // Добавление файла в текущую директорию
     ADDOP_RESULT AddFile(const fs::path& findFile);
 
-    void ItemProcessing(int nItem, BKDirDataItem* fr);
+    //void ItemProcessing(int nItem, BKDirDataItem* fr);
     void RenameRecord(BKDirDataItem *fr);
     void DeleteSelected();
 
     // добавить в образ файл/директорию
     ADDOP_RESULT AddObject(const fs::path &findFile, bool bExistDir = false);
-    void OutFromDirObject(BKDirDataItem *fr);
     // удалить из образа файл/директорию
     ADDOP_RESULT DeleteObject(BKDirDataItem *fr, bool bForce = false);
 
 protected:
+    // Печать шапки каталога
+    void PrintCatalogHead();
+    // Печать концевика каталога
+    void PrintCatalogTail();
+    // Печать одной строки для вывода одного элемента каталога: файла/директории
+    void PrintItem(BKDirDataItem& fr, const int level);
+
     void StepIntoDir(BKDirDataItem* fr);
     bool StepUptoDir(BKDirDataItem* fr);
 
@@ -147,6 +155,7 @@ protected:
     bool ExtractFile(BKDirDataItem* fr);
     bool DeleteRecursive(BKDirDataItem* fr);
     bool AnalyseExportFile(AnalyseFileStruct* a);
+
     void SetStorePath(const fs::path& str)
     {
         m_strStorePath = str;

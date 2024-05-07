@@ -146,7 +146,7 @@ void CBKImage::Close()
     }
 }
 
-const std::wstring CBKImage::GetImgFormatName(IMAGE_TYPE nType)
+std::wstring CBKImage::GetImgFormatName(IMAGE_TYPE nType)
 {
     if (nType == IMAGE_TYPE::UNKNOWN && m_pFloppyImage)
     {
@@ -166,7 +166,7 @@ void CBKImage::ClearImgVector()
     }
 
     m_vpImages.clear();
-    m_PaneInfo.clear();
+    //m_PaneInfo.clear();
 }
 
 void CBKImage::PushCurrentImg()
@@ -205,20 +205,9 @@ CBKImage::ItemPanePos CBKImage::GetTopItemIndex()
     return pp;
 }
 
-bool CBKImage::PrintCurrentDir(CBKImage::ItemPanePos pp)
+void CBKImage::PrintCatalogHead()
 {
-    if (!m_pFloppyImage->ReadCurrentDir())
-    {
-        IMAGE_ERROR error = m_pFloppyImage->GetErrorNumber();
-        std::wstring serror = g_ImageErrorStr[(int)error];
-        std::wcout << L"Ошибка: " << serror << std::endl;
-        return false;
-    }
-
-    std::vector<BKDirDataItem> *pLS = m_pFloppyImage->CurrDirectory();
-    int item = 0;
-
-    auto strSpecific = m_pFloppyImage->HasSpecificData();
+    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
     std::wcout << S_CATALOG_HEADER;
     if (!strSpecific.empty())
@@ -228,143 +217,207 @@ bool CBKImage::PrintCurrentDir(CBKImage::ItemPanePos pp)
     if (!strSpecific.empty())
         std::wcout << S_CATALOG_SEPARATOR_TAIL;
     std::wcout << std::endl;
+}
 
-    for (auto & fr : *pLS)
-    {
-        std::wstring str = fsPathToWstring(fr.strName);
-        strUtil::trim(str, L'\"');  //TODO разобраться откуда там вообще кавычки
-        std::wcout << std::setfill(L' ') << std::setw(24) << std::left << str << L" | ";
-
-        if (fr.nAttr & FR_ATTR::DIR)
-        {
-            // теперь выведем тип записи
-            switch (fr.nRecType)
-            {
-            case BKDIR_RECORD_TYPE::UP:
-                str = g_strUp;
-                break;
-            case BKDIR_RECORD_TYPE::DIR:
-                str = g_strDir;
-                break;
-            case BKDIR_RECORD_TYPE::LINK:
-                str = g_strLink;
-                break;
-            default:
-                str = L"???";
-                break;
-            }
-
-            std::wcout << std::setw(4) << str << L" |                        | ";
-            str.clear();
-        }
-        else
-        {
-            // теперь выведем тип записи
-            switch (fr.nRecType)
-            {
-            case BKDIR_RECORD_TYPE::LOGDSK:
-                str = L"LOG";
-                break;
-            case BKDIR_RECORD_TYPE::FILE:
-                str = L"FILE";
-                break;
-            default:
-                str = L"???";
-                break;
-            }
-
-            std::wcout << std::setw(4) << str << L" | ";
-            wchar_t buff[32];
-            swprintf(buff, 32, L"%d\0", fr.nBlkSize);
-            std::wcout << std::setw(6) << std::right << buff << "  ";
-            swprintf(buff, 32, L"%06o\0", fr.nAddress);
-            std::wcout << std::setw(6) << std::right << buff << " ";
-            swprintf(buff, 32, L"%06o\0", fr.nSize);
-            std::wcout << std::setw(7) << std::right << buff << L" | ";
-        }
-
-        // выводим атрибуты
-        str.clear();
-        if (fr.nAttr & FR_ATTR::DELETED)
-        {
-            str.push_back(L'x');
-        }
-        if (fr.nAttr & FR_ATTR::BAD)
-        {
-            str.push_back(L'B');
-        }
-        if (fr.nAttr & FR_ATTR::TEMPORARY)
-        {
-            str.push_back(L'T');
-        }
-        if (fr.nAttr & FR_ATTR::DIR)
-        {
-            str.push_back(L'D');
-        }
-        if (fr.nAttr & FR_ATTR::LOGDISK)
-        {
-            str.push_back(L'd');
-        }
-        if (fr.nAttr & FR_ATTR::LINK)
-        {
-            str.push_back(L'L');            // с этим в андос тоже не очень, там одновременно и D и L,
-        }                                   // где-то надо усложнять логику работы с атрибутами
-
-        //if (fr.nAttr & FR_ATTR::VOLUMEID) // не будем это отображать, андос этим злоупотребляет
-        //{                                 // хотя я точно помню, что в какой-то ОС есть конкретная запись каталога
-        //  str.push_back(L'V');            // которая используется как метка диска.
-        //}                                 // Ага. Это было в HC-DOC, но там я эту запись просто игнорирую.
-        // вот когда перестану игнорировать, тогда и подумаем над тем, что делать с этим.
-        if (fr.nAttr & FR_ATTR::ARCHIVE)
-        {
-            str.push_back(L'A');
-        }
-        if (fr.nAttr & FR_ATTR::SYSTEM)
-        {
-            str.push_back(L'S');
-        }
-        if (fr.nAttr & FR_ATTR::HIDDEN)
-        {
-            str.push_back(L'H');
-        }
-        if (fr.nAttr & FR_ATTR::PROTECTED)
-        {
-            str.push_back(L'P');
-        }
-        if (fr.nAttr & FR_ATTR::READONLY)
-        {
-            str.push_back(L'R');
-        }
-
-        std::wcout << std::setw(4) << std::left << str << L" | ";
-        BKDirDataItem *nfr = std::addressof(fr);
-
-        if (!strSpecific.empty())
-        {
-            if (fr.nRecType == BKDIR_RECORD_TYPE::UP)
-            {
-                str.clear();
-            }
-            else
-            {
-                str = m_pFloppyImage->GetSpecificData(nfr);
-            }
-
-            std::wcout << str << L" ";
-        }
-
-        //m_pListCtrl->SetItemData(item, reinterpret_cast<DWORD_PTR>(nfr));
-        std::wcout << std::endl;
-    }
+void CBKImage::PrintCatalogTail()
+{
+    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
     std::wcout << S_CATALOG_SEPARATOR;
     if (!strSpecific.empty())
         std::wcout << S_CATALOG_SEPARATOR_TAIL;
     std::wcout << std::endl;
+}
 
-    //OutCurrFilePath();
-    std::wstring strInfo = m_pFloppyImage->GetImageInfo();
-    std::wcout << std::endl << strInfo << std::endl;
+void CBKImage::PrintItem(BKDirDataItem& fr, const int level)
+{
+    if (level > 0)
+    {
+        for (int i = 0; i < level; i++)
+            std::wcout << L"\\ ";
+    }
+
+    int namewid = 24 - level * 2;
+
+    std::wstring str = fsPathToWstring(fr.strName);
+    strUtil::trim(str, L'\"');  //TODO разобраться откуда там вообще кавычки
+    std::wcout << std::setfill(L' ') << std::setw(namewid) << std::left << str << L" | ";
+
+    if (fr.nAttr & FR_ATTR::DIR)
+    {
+        // теперь выведем тип записи
+        switch (fr.nRecType)
+        {
+        case BKDIR_RECORD_TYPE::UP:
+            str = g_strUp;
+            break;
+        case BKDIR_RECORD_TYPE::DIR:
+            str = g_strDir;
+            break;
+        case BKDIR_RECORD_TYPE::LINK:
+            str = g_strLink;
+            break;
+        default:
+            str = L"???";
+            break;
+        }
+
+        std::wcout << std::setw(4) << str << L" |                        | ";
+        str.clear();
+    }
+    else
+    {
+        // теперь выведем тип записи
+        switch (fr.nRecType)
+        {
+        case BKDIR_RECORD_TYPE::LOGDSK:
+            str = L"LOG";
+            break;
+        case BKDIR_RECORD_TYPE::FILE:
+            str = L"FILE";
+            break;
+        default:
+            str = L"???";
+            break;
+        }
+
+        std::wcout << std::setw(4) << str << L" | ";
+        wchar_t buff[32];
+        swprintf(buff, 32, L"%d\0", fr.nBlkSize);
+        std::wcout << std::setw(6) << std::right << buff << "  ";
+        swprintf(buff, 32, L"%06o\0", fr.nAddress);
+        std::wcout << std::setw(6) << std::right << buff << " ";
+        swprintf(buff, 32, L"%06o\0", fr.nSize);
+        std::wcout << std::setw(7) << std::right << buff << L" | ";
+    }
+
+    // выводим атрибуты
+    str.clear();
+    if (fr.nAttr & FR_ATTR::DELETED)
+    {
+        str.push_back(L'x');
+    }
+    if (fr.nAttr & FR_ATTR::BAD)
+    {
+        str.push_back(L'B');
+    }
+    if (fr.nAttr & FR_ATTR::TEMPORARY)
+    {
+        str.push_back(L'T');
+    }
+    if (fr.nAttr & FR_ATTR::DIR)
+    {
+        str.push_back(L'D');
+    }
+    if (fr.nAttr & FR_ATTR::LOGDISK)
+    {
+        str.push_back(L'd');
+    }
+    if (fr.nAttr & FR_ATTR::LINK)
+    {
+        str.push_back(L'L');            // с этим в андос тоже не очень, там одновременно и D и L,
+    }                                   // где-то надо усложнять логику работы с атрибутами
+
+    //if (fr.nAttr & FR_ATTR::VOLUMEID) // не будем это отображать, андос этим злоупотребляет
+    //{                                 // хотя я точно помню, что в какой-то ОС есть конкретная запись каталога
+    //  str.push_back(L'V');            // которая используется как метка диска.
+    //}                                 // Ага. Это было в HC-DOC, но там я эту запись просто игнорирую.
+    // вот когда перестану игнорировать, тогда и подумаем над тем, что делать с этим.
+    if (fr.nAttr & FR_ATTR::ARCHIVE)
+    {
+        str.push_back(L'A');
+    }
+    if (fr.nAttr & FR_ATTR::SYSTEM)
+    {
+        str.push_back(L'S');
+    }
+    if (fr.nAttr & FR_ATTR::HIDDEN)
+    {
+        str.push_back(L'H');
+    }
+    if (fr.nAttr & FR_ATTR::PROTECTED)
+    {
+        str.push_back(L'P');
+    }
+    if (fr.nAttr & FR_ATTR::READONLY)
+    {
+        str.push_back(L'R');
+    }
+
+    std::wcout << std::setw(4) << std::left << str << L" | ";
+    BKDirDataItem* nfr = std::addressof(fr);
+
+    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
+    if (!strSpecific.empty())
+    {
+        if (fr.nRecType == BKDIR_RECORD_TYPE::UP)
+        {
+            str.clear();
+        }
+        else
+        {
+            str = m_pFloppyImage->GetSpecificData(nfr);
+        }
+
+        std::wcout << str << L" ";
+    }
+
+    //m_pListCtrl->SetItemData(item, reinterpret_cast<DWORD_PTR>(nfr));
+    std::wcout << std::endl;
+}
+
+bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
+{
+    if (!m_pFloppyImage->ReadCurrentDir())
+    {
+        IMAGE_ERROR error = m_pFloppyImage->GetErrorNumber();
+        std::wstring serror = g_ImageErrorStr[(int)error];
+        std::wcout << L"Ошибка: " << serror << std::endl;
+        return false;
+    }
+
+    // Копируем список записей директории
+    std::vector<BKDirDataItem> LS = *m_pFloppyImage->CurrDirectory();
+    
+    //TODO: Сортировка списка, если нужно
+
+    if (level == 0)
+        PrintCatalogHead();
+
+    for (auto & fr : LS)
+    {
+        PrintItem(fr, level);
+
+        // Если директория и рекурсивный обход, то идём вниз
+        if (recursive && fr.IsDirectory())
+        {
+            // Запись для возврата к текущей директории
+            BKDirDataItem frc;
+            frc.clear();
+            frc.nAttr = FR_ATTR::DIR;
+            frc.nRecType = BKDIR_RECORD_TYPE::UP;
+            frc.nDirNum = m_pFloppyImage->GetCurrDirNum();
+
+            //TODO: Проверка на ошибки
+            StepIntoDir(&fr);  // Спускаемся в под-директорию
+
+            PrintCurrentDirectory(level + 1, true);
+
+            //TODO: Проверка на ошибки
+            StepUptoDir(&frc);  // Поднимаемся обратно
+        }
+
+        //TODO: Если логический диск и рекурсивный обход, то идём вниз
+    }
+
+    if (level == 0)
+    {
+        PrintCatalogTail();
+
+        // Печатаем суммарную информацию под каталогом
+        std::wstring strInfo = m_pFloppyImage->GetImageInfo();
+        std::wcout << std::endl << strInfo << std::endl;
+    }
 
     return true;
 }
@@ -423,55 +476,66 @@ BKDirDataItem* CBKImage::FindFileRecord(std::wstring strFileName)
     return nullptr;
 }
 
-void CBKImage::ItemProcessing(int nItem, BKDirDataItem *fr)
-{
-    if (nItem < 0)
-    {
-        return;
-    }
-
-    CBKImage::ItemPanePos pp = GetTopItemIndex();
-    m_PaneInfo.nTopItem = pp.nTopItem;
-    m_PaneInfo.nCurItem = nItem;
-
-    if (fr->nAttr & FR_ATTR::DIR)
-    {
-        if (fr->nRecType == BKDIR_RECORD_TYPE::UP)
-        {
-            // выходим из подкаталога
-            if (!StepUptoDir(fr)) // если после выхода текущая директория стала -1, то это выход ТОЛЬКО из образа
-            {
-                // .. на корневой директории вызывает закрытие текущего открытого образа
-                //if (S_OK != AfxGetMainWnd()->SendMessage(WM_OUT_OF_IMAGE, WPARAM(0), LPARAM(0)))
-                {
-                    return;
-                }
-            }
-        }
-        else
-        {
-            // заходим в директорию
-            StepIntoDir(fr);
-        }
-
-        //m_pListCtrl->DeleteAllItems();
-        CBKImage::ItemPanePos pp(m_PaneInfo.nTopItem, m_PaneInfo.nCurItem);
-        PrintCurrentDir(pp);
-    }
-    else if (fr->nAttr & FR_ATTR::LOGDISK)
-    {
-        StepIntoDir(fr); // нужно, чтобы имя логдиска отображалось в пути, при входе в него.
-        //AfxGetMainWnd()->SendMessage(WM_PUT_INTO_LD, static_cast<WPARAM>(m_pFloppyImage->GetBaseOffset() + fr->nStartBlock * BLOCK_SIZE), static_cast<LPARAM>(fr->nSize));
-    }
-}
+//void CBKImage::ItemProcessing(int nItem, BKDirDataItem *fr)
+//{
+//    if (nItem < 0)
+//    {
+//        return;
+//    }
+//
+//    CBKImage::ItemPanePos pp = GetTopItemIndex();
+//    m_PaneInfo.nTopItem = pp.nTopItem;
+//    m_PaneInfo.nCurItem = nItem;
+//
+//    if (fr->nAttr & FR_ATTR::DIR)
+//    {
+//        if (fr->nRecType == BKDIR_RECORD_TYPE::UP)
+//        {
+//            // выходим из подкаталога
+//            if (!StepUptoDir(fr)) // если после выхода текущая директория стала -1, то это выход ТОЛЬКО из образа
+//            {
+//                // .. на корневой директории вызывает закрытие текущего открытого образа
+//                //if (S_OK != AfxGetMainWnd()->SendMessage(WM_OUT_OF_IMAGE, WPARAM(0), LPARAM(0)))
+//                {
+//                    return;
+//                }
+//            }
+//        }
+//        else
+//        {
+//            // заходим в директорию
+//            StepIntoDir(fr);
+//        }
+//
+//        //m_pListCtrl->DeleteAllItems();
+//        //CBKImage::ItemPanePos pp(m_PaneInfo.nTopItem, m_PaneInfo.nCurItem);
+//        PrintCurrentDirectory();
+//    }
+//    else if (fr->nAttr & FR_ATTR::LOGDISK)
+//    {
+//        StepIntoDir(fr); // нужно, чтобы имя логдиска отображалось в пути, при входе в него.
+//        //AfxGetMainWnd()->SendMessage(WM_PUT_INTO_LD, static_cast<WPARAM>(m_pFloppyImage->GetBaseOffset() + fr->nStartBlock * BLOCK_SIZE), static_cast<LPARAM>(fr->nSize));
+//    }
+//}
 
 // Спускаемся на уровень вниз, в под-директорию или в логический диск
 void CBKImage::StepIntoDir(BKDirDataItem *fr)
 {
-    //if (m_pFloppyImage->ChangeDir(fr))
-    //{
-    //	m_vSelItems.push_back(m_PaneInfo); // сохраняем текущее
-    //	// заполняем новое.
+    //BKDirDataItem frc;
+    //frc.clear();
+    //frc.nAttr = FR_ATTR::DIR;
+    //frc.nRecType = BKDIR_RECORD_TYPE::UP;
+    //frc.nDirNum = m_pFloppyImage->GetCurrDirNum();
+
+    if (!m_pFloppyImage->ChangeDir(fr))
+    {
+        //TODO: Обработка ошибки
+        //	AfxGetMainWnd()->SendMessage(WM_SEND_ERRORNUM, WPARAM(0), static_cast<LPARAM>(m_pFloppyImage->GetErrorNumber()));
+    }
+
+    //// Записываем frc в стек для будущего возврата
+    //m_vDirStack.push_back(frc);
+
     //	std::wstring name = strUtil::replaceChar(fr->strName, L'/', L'_'); // меняем '/' на '_', чтобы не путалась.
     //	m_PaneInfo.strCurrPath += name + L"/";
     //	m_PaneInfo.nCurDir = fr->nDirNum;
@@ -479,11 +543,6 @@ void CBKImage::StepIntoDir(BKDirDataItem *fr)
     //	m_PaneInfo.nTopItem = 0;
     //	m_PaneInfo.nCurItem = 0;
     //	OutCurrFilePath();
-    //}
-    //else
-    //{
-    //	AfxGetMainWnd()->SendMessage(WM_SEND_ERRORNUM, WPARAM(0), static_cast<LPARAM>(m_pFloppyImage->GetErrorNumber()));
-    //}
 }
 
 // Выходим вверх из под-директории или из логического диска
@@ -503,13 +562,13 @@ bool CBKImage::StepUptoDir(BKDirDataItem *fr)
         // если вектор пуст - то выход из образа, иначе - выход из лог.диска
         if (!m_vSelItems.empty())
         {
-            m_PaneInfo = m_vSelItems.back();
+            //m_PaneInfo = m_vSelItems.back();
             m_vSelItems.pop_back();
         }
         else
         {
-            m_PaneInfo.clear();
-            m_PaneInfo.nCurDir = -1;
+            //m_PaneInfo.clear();
+            //m_PaneInfo.nCurDir = -1;
         }
 
         //OutCurrFilePath();
@@ -562,7 +621,7 @@ void CBKImage::RenameRecord(BKDirDataItem *fr)
     m_pFloppyImage->RenameRecord(fr);
     // 3. Перечитываем каталог заново.
     //m_pListCtrl->DeleteAllItems();
-    PrintCurrentDir(pp);
+    PrintCurrentDirectory();
     //m_pListCtrl->SetFocus();
 }
 
@@ -1268,14 +1327,14 @@ l_sque_retries:
     return ret;
 }
 
-// нужна функция выхода из директории, когда добавляется новая директория.
-void CBKImage::OutFromDirObject(BKDirDataItem *fr)
-{
-    fr->strName = L"..";
-    fr->nRecType = BKDIR_RECORD_TYPE::UP;
-    fr->nDirNum = fr->nDirBelong;
-    m_pFloppyImage->ChangeDir(fr);
-}
+//// нужна функция выхода из директории, когда добавляется новая директория.
+//void CBKImage::OutFromDirObject(BKDirDataItem *fr)
+//{
+//    fr->strName = L"..";
+//    fr->nRecType = BKDIR_RECORD_TYPE::UP;
+//    fr->nDirNum = fr->nDirBelong;
+//    m_pFloppyImage->ChangeDir(fr);
+//}
 
 ADDOP_RESULT CBKImage::DeleteObject(BKDirDataItem *fr, bool bForce)
 {

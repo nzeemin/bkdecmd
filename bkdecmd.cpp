@@ -269,8 +269,7 @@ int wmain_impl(std::vector<std::wstring>& wargs)
 bool DoDiskList()
 {
     // Читаем и печатаем список файлов в корневой папке
-    CBKImage::ItemPanePos pp(0, 0);
-    return g_BKImage.PrintCurrentDir(pp);
+    return g_BKImage.PrintCurrentDirectory(0, true);
 }
 
 bool DoDiskExtractFile()

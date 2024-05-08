@@ -111,6 +111,9 @@ public:
         m_bCheckLogExtractStatus = bStatus;
     }
 
+    // Печать общей информации об образе диска
+    void PrintImageInfo();
+
     // Выдать на печать текущую директорию;
     // при level == 0 печатает заголовок и концевик таблицы;
     // при recursive вызывается рекурсивно для под-директорий
@@ -142,9 +145,9 @@ public:
 
 protected:
     // Печать шапки каталога
-    void PrintCatalogHead();
+    void PrintCatalogTableHead();
     // Печать концевика каталога
-    void PrintCatalogTail();
+    void PrintCatalogTableTail();
     // Печать одной строки для вывода одного элемента каталога: файла/директории
     void PrintItem(BKDirDataItem& fr, const int level);
 

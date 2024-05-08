@@ -17,7 +17,9 @@ void PrintWelcome();
 void PrintUsage();
 bool ParseCommandLine(std::vector<std::wstring>& wargs);
 
+bool DoDiskInfo();
 bool DoDiskList();
+bool DoDiskListRecursive();
 bool DoDiskExtractFile();
 bool DoDiskAddFile();
 bool DoDiskDeleteFile();
@@ -55,7 +57,9 @@ struct CommandInfo
 }
 static g_CommandInfos[] =
 {
+    { L"i",    DoDiskInfo,                   0        },
     { L"l",    DoDiskList,                   0        },
+    { L"lr",   DoDiskListRecursive,          0        },
     { L"e",    DoDiskExtractFile,            CMDR_PARAM_FILENAME },
     { L"a",    DoDiskAddFile,                CMDR_PARAM_FILENAME | CMDR_IMAGEFILERW },
     { L"d",    DoDiskDeleteFile,             CMDR_PARAM_FILENAME | CMDR_IMAGEFILERW },
@@ -266,9 +270,21 @@ int wmain_impl(std::vector<std::wstring>& wargs)
 //////////////////////////////////////////////////////////////////////
 
 
+bool DoDiskInfo()
+{
+    g_BKImage.PrintImageInfo();
+    return true;
+}
+
 bool DoDiskList()
 {
-    // Читаем и печатаем список файлов в корневой папке
+    // Читаем и печатаем список файлов в корневой директории
+    return g_BKImage.PrintCurrentDirectory();
+}
+
+bool DoDiskListRecursive()
+{
+    // Читаем и печатаем список файлов в корневой директории с обходом под-директорий
     return g_BKImage.PrintCurrentDirectory(0, true);
 }
 

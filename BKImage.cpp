@@ -205,7 +205,7 @@ CBKImage::ItemPanePos CBKImage::GetTopItemIndex()
     return pp;
 }
 
-void CBKImage::PrintCatalogHead()
+void CBKImage::PrintCatalogTableHead()
 {
     std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
@@ -219,7 +219,7 @@ void CBKImage::PrintCatalogHead()
     std::wcout << std::endl;
 }
 
-void CBKImage::PrintCatalogTail()
+void CBKImage::PrintCatalogTableTail()
 {
     std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
@@ -227,6 +227,12 @@ void CBKImage::PrintCatalogTail()
     if (!strSpecific.empty())
         std::wcout << S_CATALOG_SEPARATOR_TAIL;
     std::wcout << std::endl;
+}
+
+void CBKImage::PrintImageInfo()
+{
+    std::wstring strInfo = m_pFloppyImage->GetImageInfo();
+    std::wcout << strInfo << std::endl;
 }
 
 void CBKImage::PrintItem(BKDirDataItem& fr, const int level)
@@ -382,7 +388,7 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
     //TODO: Сортировка списка, если нужно
 
     if (level == 0)
-        PrintCatalogHead();
+        PrintCatalogTableHead();
 
     for (auto & fr : LS)
     {
@@ -412,11 +418,11 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
 
     if (level == 0)
     {
-        PrintCatalogTail();
+        PrintCatalogTableTail();
 
         // Печатаем суммарную информацию под каталогом
-        std::wstring strInfo = m_pFloppyImage->GetImageInfo();
-        std::wcout << std::endl << strInfo << std::endl;
+        std::wcout << std::endl;
+        PrintImageInfo();
     }
 
     return true;

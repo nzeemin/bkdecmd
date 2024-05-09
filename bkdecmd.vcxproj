@@ -161,6 +161,7 @@
     <ClInclude Include="BKImage.h" />
     <ClInclude Include="BKImgFile.h" />
     <ClInclude Include="BKParseImage.h" />
+    <ClInclude Include="hashes\sha1.hpp" />
     <ClInclude Include="imgos\BKDirDataItem.h" />
     <ClInclude Include="imgos\BKDRT11Header.h" />
     <ClInclude Include="imgos\BKFloppyImage_ANDos.h" />

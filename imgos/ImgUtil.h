@@ -166,9 +166,9 @@ namespace imgUtil
         return std::wstring(buf.data(), buf.data() + size); // We don't want the '\0' inside
     }
 
-    // получение строки из ресурсов. платформо- и системозависимая функция
-    //std::wstring LoadStringFromResource(__in unsigned int stringID, __in_opt HINSTANCE instance = nullptr);
-
     bool AnalyseImportFile(AnalyseFileStruct *a);
+    
     uint16_t CalcCRC(uint8_t *buffer, size_t len);
+
+    std::wstring CalcSHA1(uint8_t* buffer, size_t length);
 }

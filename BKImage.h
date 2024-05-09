@@ -119,6 +119,9 @@ public:
     }
     inline void SetListingFormat(LISTING_FORMAT format) { m_nListingFormat = format; }
 
+    // Подсчитать и напечатать значение хэша SHA1 для образа диска
+    bool PrintImageSHA1();
+
     // Печать общей информации об образе диска
     bool PrintImageInfo();
 

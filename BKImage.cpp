@@ -245,6 +245,16 @@ void CBKImage::PrintCatalogTableTail()
     std::wcout << std::endl;
 }
 
+bool CBKImage::PrintImageSHA1()
+{
+    std::wstring imageSha1 = m_pFloppyImage->CalcImageSHA1();
+    if (imageSha1.empty())
+        return false;
+
+    std::wcout << L"SHA1: " << imageSha1 << std::endl;
+    return true;
+}
+
 bool CBKImage::PrintImageInfo()
 {
     if (!m_pFloppyImage->ReadCurrentDir())

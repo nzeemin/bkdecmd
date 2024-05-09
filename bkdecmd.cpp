@@ -258,6 +258,10 @@ int wmain_impl(std::vector<std::wstring>& wargs)
     std::wcout << L"Размер: " << g_BKImage.GetImgSize() << L"  ";
     //std::wcout << L"Свободно: " << g_BKImage.GetImageFreeSpace() << L"  ";
     std::wcout << L"Режим: " << (g_BKImage.GetImageOpenStatus() ? L"RO" : L"RW") << std::endl;
+
+    if (!g_BKImage.PrintImageSHA1())
+        return 255;
+
     std::wcout << std::endl;
 
     // Main task

@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "BKImgFile.h"
+#include "StringUtil.h"
+#include "hashes/sha1.hpp"
 
 
 constexpr auto BLOCK_SIZE = 512;
@@ -237,4 +239,39 @@ bool CBKImgFile::IsFileOpen() const
     }
 
     return false;
+}
+
+std::wstring CBKImgFile::CalcImageSHA1()
+{
+    if (!m_f)
+        return L"";
+
+    const size_t bufferSizeInBlocks = 16;
+    const size_t bufferSizeInBytes = BLOCK_SIZE * bufferSizeInBlocks;
+
+    long sizeTotal = GetFileSize();
+    if (sizeTotal < 0)
+        return L"";
+
+    std::vector<uint8_t> vec(bufferSizeInBytes);
+    uint32_t lbano = 0;
+    SHA1 hash;
+    long reminder = sizeTotal;
+    while (reminder > 0)
+    {
+        uint32_t blocksToRead = reminder >= bufferSizeInBytes
+            ? bufferSizeInBlocks
+            : (reminder + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        
+        //TODO: Показать что за ошибка
+        if (!ReadLBA(vec.data(), lbano, blocksToRead))
+            return L"";
+
+        hash.update(vec.data(), blocksToRead * BLOCK_SIZE);
+
+        lbano += blocksToRead;
+        reminder -= blocksToRead * BLOCK_SIZE;
+    }
+
+    return strUtil::stringToWstring(hash.final());
 }

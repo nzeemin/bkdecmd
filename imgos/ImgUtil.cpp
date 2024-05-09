@@ -2,6 +2,7 @@
 
 #include "ImgUtil.h"
 #include "../StringUtil.h"
+#include "../hashes/sha1.hpp"
 
 const std::wstring g_strDir = L"DIR";
 const std::wstring g_strUp = L"UP";
@@ -444,4 +445,13 @@ uint16_t imgUtil::CalcCRC(uint8_t *buffer, size_t len)
     }
 
     return static_cast<uint16_t>(crc & 0xffff);
+}
+
+std::wstring imgUtil::CalcSHA1(uint8_t* buffer, size_t length)
+{
+    SHA1 sha1;
+    sha1.update(buffer, length);
+    std::string result = sha1.final();
+
+    return strUtil::stringToWstring(result);
 }

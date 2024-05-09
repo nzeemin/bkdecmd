@@ -134,5 +134,8 @@
     <ClInclude Include="imgos\BKDRT11Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hashes\sha1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

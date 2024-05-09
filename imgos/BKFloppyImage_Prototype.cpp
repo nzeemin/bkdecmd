@@ -153,6 +153,11 @@ bool CBKFloppyImage_Prototype::SeektoBlkWriteData(size_t nBlockNumber, void *ptr
     return false;
 }
 
+std::wstring CBKFloppyImage_Prototype::CalcImageSHA1()
+{
+    return m_pFoppyImgFile.CalcImageSHA1();
+}
+
 // виртуальная функция, для каждой ФС - своя реализация.
 bool CBKFloppyImage_Prototype::ReadCurrentDir()
 {

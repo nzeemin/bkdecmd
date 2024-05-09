@@ -31,6 +31,10 @@ public:
     bool            Open(const fs::path &pathName, const bool bWrite);
     void            Close();
 
+    long            GetFileSize() const;
+    bool            SeekTo00() const;
+    bool            IsFileOpen() const;
+
     // установка новых значений CHS
     // если какое-то значение == 255, то заданное значение не меняется
     void            SetGeometry(const uint8_t c, const uint8_t h, const uint8_t s);
@@ -47,7 +51,5 @@ public:
     bool            ReadLBA(void *buffer, const uint32_t lba, const uint32_t numSectors) const;
     bool            WriteLBA(void *buffer, const uint32_t lba, const uint32_t numSectors) const;
 
-    long            GetFileSize() const;
-    bool            SeekTo00() const;
-    bool            IsFileOpen() const;
+    std::wstring CalcImageSHA1();
 };

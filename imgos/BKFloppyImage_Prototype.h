@@ -133,6 +133,8 @@ public:
         return EvenSizeByBlock_l(length) / m_nBlockSize;
     }
 
+    std::wstring CalcImageSHA1();
+
 public:  // виртуальные функции
 
     // Строка с названием поля для данных, специфических для заданной ОС

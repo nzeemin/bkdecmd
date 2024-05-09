@@ -41,9 +41,16 @@ jobs:
     - name: Test
       run: |
         ./bkdecmd i ./images/ANDOS330.IMG
+        ./bkdecmd l ./images/ANDOS330.IMG
         ./bkdecmd lr ./images/ANDOS330.IMG
         ./bkdecmd lr ./images/AODOS.IMG
         ./bkdecmd lr ./images/BK_SYS.DSK
         ./bkdecmd lr ./images/CSIDOS.IMG
         ./bkdecmd lr ./images/MKDOS315.IMG
         ./bkdecmd lr ./images/NORD_1.bkd
+        ./bkdecmd lm ./images/ANDOS330.IMG
+        ./bkdecmd lm ./images/AODOS.IMG
+        ./bkdecmd lm ./images/BK_SYS.DSK
+        ./bkdecmd lm ./images/CSIDOS.IMG
+        ./bkdecmd lm ./images/MKDOS315.IMG
+        ./bkdecmd lm ./images/NORD_1.bkd

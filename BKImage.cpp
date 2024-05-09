@@ -16,9 +16,11 @@
 //#include "imgos/BKFloppyImage_MSDOS.h"
 
 
-const wchar_t* S_CATALOG_HEADER = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. |";
-const wchar_t* S_CATALOG_SEPARATOR = L"-------------------------|------|------------------------|------|";
+const wchar_t* S_CATALOG_HEADER_DEFAULT    = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. |";
+const wchar_t* S_CATALOG_SEPARATOR_DEFAULT = L"-------------------------|------|------------------------|------|";
 const wchar_t* S_CATALOG_SEPARATOR_TAIL = L"------------------";
+const wchar_t* S_CATALOG_HEADER_RAR_LIKE    = L" Attributes      Size    Date   Time   Name";
+const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE = L"----------- ---------  -------- -----  ----";
 
 
 std::wstring g_AddOpErrorStr[] =
@@ -37,6 +39,7 @@ CBKImage::CBKImage()
     , m_bCheckUseBinStatus(false)
     , m_bCheckUseLongBinStatus(false)
     , m_bCheckLogExtractStatus(false)
+    , m_nListingFormat(LISTING_FORMAT::DEFAULT)
 {
 }
 
@@ -207,69 +210,81 @@ CBKImage::ItemPanePos CBKImage::GetTopItemIndex()
 
 void CBKImage::PrintCatalogTableHead()
 {
-    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
+    if (m_nListingFormat == LISTING_FORMAT::DEFAULT)
+    {
+        std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
-    std::wcout << S_CATALOG_HEADER;
-    if (!strSpecific.empty())
-        std::wcout << L" " << strSpecific;
-    std::wcout << std::endl;
-    std::wcout << S_CATALOG_SEPARATOR;
-    if (!strSpecific.empty())
-        std::wcout << S_CATALOG_SEPARATOR_TAIL;
+        std::wcout << S_CATALOG_HEADER_DEFAULT;
+        if (!strSpecific.empty())
+            std::wcout << L" " << strSpecific;
+        std::wcout << std::endl;
+        std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
+        if (!strSpecific.empty())
+            std::wcout << S_CATALOG_SEPARATOR_TAIL;
+    }
+    else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)
+    {
+        std::wcout << S_CATALOG_HEADER_RAR_LIKE << std::endl;
+        std::wcout << S_CATALOG_SEPARATOR_RAR_LIKE;
+    }
+
     std::wcout << std::endl;
 }
 
 void CBKImage::PrintCatalogTableTail()
 {
-    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
+    if (m_nListingFormat == LISTING_FORMAT::DEFAULT)
+    {
+        std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
 
-    std::wcout << S_CATALOG_SEPARATOR;
-    if (!strSpecific.empty())
-        std::wcout << S_CATALOG_SEPARATOR_TAIL;
+        std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
+        if (!strSpecific.empty())
+            std::wcout << S_CATALOG_SEPARATOR_TAIL;
+    }
+
     std::wcout << std::endl;
 }
 
-void CBKImage::PrintImageInfo()
+bool CBKImage::PrintImageInfo()
 {
-    std::wstring strInfo = m_pFloppyImage->GetImageInfo();
-    std::wcout << strInfo << std::endl;
-}
-
-void CBKImage::PrintItem(BKDirDataItem& fr, const int level)
-{
-    if (level > 0)
+    if (!m_pFloppyImage->ReadCurrentDir())
     {
-        for (int i = 0; i < level; i++)
-            std::wcout << L"\\ ";
+        IMAGE_ERROR error = m_pFloppyImage->GetErrorNumber();
+        std::wstring serror = g_ImageErrorStr[(int)error];
+        std::wcout << L"Ошибка: " << serror << std::endl;
+        return false;
     }
 
-    int namewid = 24 - level * 2;
+    std::wstring strInfo = m_pFloppyImage->GetImageInfo();
+    std::wcout << strInfo << std::endl;
 
-    std::wstring str = fsPathToWstring(fr.strName);
-    strUtil::trim(str, L'\"');  //TODO разобраться откуда там вообще кавычки
-    std::wcout << std::setfill(L' ') << std::setw(namewid) << std::left << str << L" | ";
+    return true;
+}
 
+void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpath)
+{
+    std::wstring strName = fsPathToWstring(fr.strName);
+    strUtil::trim(strName, L'\"');  //TODO разобраться откуда там вообще кавычки
+
+    std::wstring strType;
     if (fr.nAttr & FR_ATTR::DIR)
     {
         // теперь выведем тип записи
         switch (fr.nRecType)
         {
         case BKDIR_RECORD_TYPE::UP:
-            str = g_strUp;
+            strType = g_strUp;
             break;
         case BKDIR_RECORD_TYPE::DIR:
-            str = g_strDir;
+            strType = g_strDir;
             break;
         case BKDIR_RECORD_TYPE::LINK:
-            str = g_strLink;
+            strType = g_strLink;
             break;
         default:
-            str = L"???";
+            strType = L"???";
             break;
         }
-
-        std::wcout << std::setw(4) << str << L" |                        | ";
-        str.clear();
     }
     else
     {
@@ -277,102 +292,140 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level)
         switch (fr.nRecType)
         {
         case BKDIR_RECORD_TYPE::LOGDSK:
-            str = L"LOG";
+            strType = L"LOG";
             break;
         case BKDIR_RECORD_TYPE::FILE:
-            str = L"FILE";
+            strType = L"FILE";
             break;
         default:
-            str = L"???";
+            strType = L"???";
             break;
         }
-
-        std::wcout << std::setw(4) << str << L" | ";
-        wchar_t buff[32];
-        swprintf(buff, 32, L"%d\0", fr.nBlkSize);
-        std::wcout << std::setw(6) << std::right << buff << "  ";
-        swprintf(buff, 32, L"%06o\0", fr.nAddress);
-        std::wcout << std::setw(6) << std::right << buff << " ";
-        swprintf(buff, 32, L"%06o\0", fr.nSize);
-        std::wcout << std::setw(7) << std::right << buff << L" | ";
     }
 
-    // выводим атрибуты
-    str.clear();
+    std::wstring strAttr;
     if (fr.nAttr & FR_ATTR::DELETED)
     {
-        str.push_back(L'x');
+        strAttr.push_back(L'x');
     }
     if (fr.nAttr & FR_ATTR::BAD)
     {
-        str.push_back(L'B');
+        strAttr.push_back(L'B');
     }
     if (fr.nAttr & FR_ATTR::TEMPORARY)
     {
-        str.push_back(L'T');
+        strAttr.push_back(L'T');
     }
     if (fr.nAttr & FR_ATTR::DIR)
     {
-        str.push_back(L'D');
+        strAttr.push_back(L'D');
     }
     if (fr.nAttr & FR_ATTR::LOGDISK)
     {
-        str.push_back(L'd');
+        strAttr.push_back(L'd');
     }
     if (fr.nAttr & FR_ATTR::LINK)
     {
-        str.push_back(L'L');            // с этим в андос тоже не очень, там одновременно и D и L,
+        strAttr.push_back(L'L');        // с этим в андос тоже не очень, там одновременно и D и L,
     }                                   // где-то надо усложнять логику работы с атрибутами
 
     //if (fr.nAttr & FR_ATTR::VOLUMEID) // не будем это отображать, андос этим злоупотребляет
     //{                                 // хотя я точно помню, что в какой-то ОС есть конкретная запись каталога
-    //  str.push_back(L'V');            // которая используется как метка диска.
+    //  strAttr.push_back(L'V');        // которая используется как метка диска.
     //}                                 // Ага. Это было в HC-DOC, но там я эту запись просто игнорирую.
     // вот когда перестану игнорировать, тогда и подумаем над тем, что делать с этим.
     if (fr.nAttr & FR_ATTR::ARCHIVE)
     {
-        str.push_back(L'A');
+        strAttr.push_back(L'A');
     }
     if (fr.nAttr & FR_ATTR::SYSTEM)
     {
-        str.push_back(L'S');
+        strAttr.push_back(L'S');
     }
     if (fr.nAttr & FR_ATTR::HIDDEN)
     {
-        str.push_back(L'H');
+        strAttr.push_back(L'H');
     }
     if (fr.nAttr & FR_ATTR::PROTECTED)
     {
-        str.push_back(L'P');
+        strAttr.push_back(L'P');
     }
     if (fr.nAttr & FR_ATTR::READONLY)
     {
-        str.push_back(L'R');
+        strAttr.push_back(L'R');
     }
 
-    std::wcout << std::setw(4) << std::left << str << L" | ";
-    BKDirDataItem* nfr = std::addressof(fr);
-
-    std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
-    if (!strSpecific.empty())
+    if (m_nListingFormat == LISTING_FORMAT::DEFAULT)
     {
-        if (fr.nRecType == BKDIR_RECORD_TYPE::UP)
+        if (level > 0)
         {
-            str.clear();
-        }
-        else
-        {
-            str = m_pFloppyImage->GetSpecificData(nfr);
+            for (int i = 0; i < level; i++)
+                std::wcout << L"\\ ";
         }
 
-        std::wcout << str << L" ";
+        int namewid = 24 - level * 2;
+        std::wcout << std::setfill(L' ') << std::setw(namewid) << std::left << strName << L" | ";
+
+        if ((fr.nAttr & FR_ATTR::DIR) != 0)
+        {
+            std::wcout << std::setw(4) << strType << L" |                        | ";
+        }
+        if ((fr.nAttr & FR_ATTR::DIR) == 0)
+        {
+            std::wcout << std::setw(4) << strType << L" | ";
+
+            wchar_t buff[32];
+            swprintf(buff, 32, L"%d\0", fr.nBlkSize);
+            std::wcout << std::setw(6) << std::right << buff << "  ";
+            swprintf(buff, 32, L"%06o\0", fr.nAddress);
+            std::wcout << std::setw(6) << std::right << buff << " ";
+            swprintf(buff, 32, L"%06o\0", fr.nSize);
+            std::wcout << std::setw(7) << std::right << buff << L" | ";
+        }
+
+        std::wcout << std::setw(4) << std::left << strAttr << L" | ";
+
+        std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
+        if (!strSpecific.empty())
+        {
+            std::wstring strSpec = m_pFloppyImage->GetSpecificData(std::addressof(fr));
+            std::wcout << strSpec << L" ";
+        }
+    }
+    else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)
+    {
+        std::wcout << L"   " << std::setw(7) << std::setfill(L'.') << std::left << strAttr << L"  ";
+
+        wchar_t buff[32];
+        swprintf(buff, 32, L"%d\0", fr.nBlkSize * 512);
+        std::wcout << std::setw(9) << std::setfill(L' ') << std::right << buff << "  ";
+
+        std::wstring strDate;
+        std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
+        if (!strSpecific.empty())
+        {
+            std::wstring strSpec = m_pFloppyImage->GetSpecificData(std::addressof(fr));
+            int year, month, day;
+            if (swscanf(strSpec.c_str(), L"%04d-%02d-%02d", &year, &month, &day) == 3 &&
+                    year > 1960 && month > 0 && day > 0)
+            {
+                swprintf(buff, 32, L"%02d-%02d-%02d", year % 100, month, day);
+                strDate = buff;
+            }
+        }
+        if (strDate.empty())
+            std::wcout << L"                ";
+        else
+            std::wcout << strDate << L" 00:00  ";
+
+        std::wcout << dirpath << strName << L"  ";
     }
 
     //m_pListCtrl->SetItemData(item, reinterpret_cast<DWORD_PTR>(nfr));
     std::wcout << std::endl;
 }
 
-bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
+bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive, std::wstring dirpath)
 {
     if (!m_pFloppyImage->ReadCurrentDir())
     {
@@ -392,7 +445,10 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
 
     for (auto & fr : LS)
     {
-        PrintItem(fr, level);
+        // Для формата RAR_LIKE не показываем директории и линки - только файлы
+        if (m_nListingFormat != LISTING_FORMAT::RAR_LIKE ||
+                (fr.nAttr & (FR_ATTR::DIR | FR_ATTR::LINK | FR_ATTR::DELETED)) == 0)
+            PrintItem(fr, level, dirpath);
 
         // Если директория и рекурсивный обход, то идём вниз
         if (recursive && fr.IsDirectory())
@@ -407,7 +463,8 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
             //TODO: Проверка на ошибки
             StepIntoDir(&fr);  // Спускаемся в под-директорию
 
-            PrintCurrentDirectory(level + 1, true);
+            // Рекурсивный вызов
+            PrintCurrentDirectory(level + 1, true, dirpath + fsPathToWstring(fr.strName) + L"/");
 
             //TODO: Проверка на ошибки
             StepUptoDir(&frc);  // Поднимаемся обратно
@@ -416,7 +473,7 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive)
         //TODO: Если логический диск и рекурсивный обход, то идём вниз
     }
 
-    if (level == 0)
+    if (level == 0 && m_nListingFormat == LISTING_FORMAT::DEFAULT)
     {
         PrintCatalogTableTail();
 

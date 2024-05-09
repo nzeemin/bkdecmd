@@ -20,6 +20,7 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs);
 bool DoDiskInfo();
 bool DoDiskList();
 bool DoDiskListRecursive();
+bool DoDiskListForMax();
 bool DoDiskExtractFile();
 bool DoDiskAddFile();
 bool DoDiskDeleteFile();
@@ -60,6 +61,7 @@ static g_CommandInfos[] =
     { L"i",    DoDiskInfo,                   0        },
     { L"l",    DoDiskList,                   0        },
     { L"lr",   DoDiskListRecursive,          0        },
+    { L"lm",   DoDiskListForMax,             0        },
     { L"e",    DoDiskExtractFile,            CMDR_PARAM_FILENAME },
     { L"a",    DoDiskAddFile,                CMDR_PARAM_FILENAME | CMDR_IMAGEFILERW },
     { L"d",    DoDiskDeleteFile,             CMDR_PARAM_FILENAME | CMDR_IMAGEFILERW },
@@ -86,7 +88,9 @@ void PrintUsage()
 {
     std::wcout << std::endl << L"Использование:" << std::endl
             << L"  Команды для работы с образами дисков:" << std::endl
-            << L"    bkdecmd l <ImageFile>  - показать содержимое каталога" << std::endl
+            << L"    bkdecmd l <ImageFile>  - показать содержимое корневой директории" << std::endl
+            << L"    bkdecmd lr <ImageFile>  - показать содержимое диска рекурсивным обходом директорий" << std::endl
+            << L"    bkdecmd lm <ImageFile>  - показать содержимое диска в RAR-подобном формате" << std::endl
             << L"    bkdecmd e <ImageFile> <FileName>  - извлечь файл" << std::endl
             << L"    bkdecmd a <ImageFile> <FileName>  - добавить файл" << std::endl
             << L"    bkdecmd d <ImageFile> <FileName>  - удалить файл" << std::endl;
@@ -285,6 +289,13 @@ bool DoDiskList()
 bool DoDiskListRecursive()
 {
     // Читаем и печатаем список файлов в корневой директории с обходом под-директорий
+    return g_BKImage.PrintCurrentDirectory(0, true);
+}
+
+bool DoDiskListForMax()
+{
+    // Читаем и печатаем список файлов в корневой директории с обходом под-директорий
+    g_BKImage.SetListingFormat(LISTING_FORMAT::RAR_LIKE);
     return g_BKImage.PrintCurrentDirectory(0, true);
 }
 

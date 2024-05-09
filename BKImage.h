@@ -21,6 +21,12 @@ enum class ADD_ERROR : int
     NUMBERS
 };
 
+enum class LISTING_FORMAT : int
+{
+    DEFAULT = 0,    // Формат по умолчанию, похожий на тот что показывается в BKDE GUI
+    RAR_LIKE,       // Формат подобный тому что выдаёт архиватор RAR; только файлы, директории не перечисляются
+};
+
 extern std::wstring g_AddOpErrorStr[];
 
 // Результат операции добавления объекта
@@ -43,12 +49,13 @@ struct ADDOP_RESULT
 
 class CBKImage
 {
+    std::unique_ptr<CBKFloppyImage_Prototype> m_pFloppyImage;
+
     fs::path m_strStorePath;        // путь, куда будем сохранять файлы
     bool m_bCheckUseBinStatus;      // состояние чекбоксов "использовать формат бин"
     bool m_bCheckUseLongBinStatus;  // состояние чекбоксов "использовать формат бин"
     bool m_bCheckLogExtractStatus;  // и "создавать лог извлечения" соответственно, проще их тут хранить, чем запрашивать сложными путями у родителя
-
-    std::unique_ptr<CBKFloppyImage_Prototype> m_pFloppyImage;
+    LISTING_FORMAT m_nListingFormat;
 
     //PaneInfo                m_PaneInfo;  //TODO: Убрать
     std::vector<PaneInfo>   m_vSelItems;  //TODO: Убрать
@@ -110,14 +117,15 @@ public:
     {
         m_bCheckLogExtractStatus = bStatus;
     }
+    inline void SetListingFormat(LISTING_FORMAT format) { m_nListingFormat = format; }
 
     // Печать общей информации об образе диска
-    void PrintImageInfo();
+    bool PrintImageInfo();
 
     // Выдать на печать текущую директорию;
     // при level == 0 печатает заголовок и концевик таблицы;
     // при recursive вызывается рекурсивно для под-директорий
-    bool PrintCurrentDirectory(const int level = 0, const bool recursive = false);
+    bool PrintCurrentDirectory(const int level = 0, const bool recursive = false, std::wstring dirpath = L"");
 
     // Найти объект (файл/директория) по имени в текущей директории
     BKDirDataItem* FindRecordByName(std::wstring strName);
@@ -149,7 +157,7 @@ protected:
     // Печать концевика каталога
     void PrintCatalogTableTail();
     // Печать одной строки для вывода одного элемента каталога: файла/директории
-    void PrintItem(BKDirDataItem& fr, const int level);
+    void PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpath);
 
     void StepIntoDir(BKDirDataItem* fr);
     bool StepUptoDir(BKDirDataItem* fr);

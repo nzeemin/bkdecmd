@@ -48,23 +48,19 @@ void CBKFloppyImage_Prototype::CloseFloppyImage()
 
 const std::wstring CBKFloppyImage_Prototype::GetImageInfo() const
 {
-    std::wstring strf = L"Свободно в каталоге: %d запис%s из %d. Свободно: %d блок%s / %d байт%s из %d / %d"; //imgUtil::LoadStringFromResource(IDS_INFO_FREE_BLK);
+    const wchar_t* strf = L"Свободно в каталоге: %d запис%ls из %d. Свободно: %d блок%ls / %d байт%ls из %d / %d";
 
-    if (!strf.empty())
-    {
-        auto freeblocks = static_cast<unsigned int>(m_sDiskCat.nFreeBlocks);
-        unsigned int bytes = freeblocks * m_nBlockSize;
-        auto totalblocks = static_cast<unsigned int>(m_sDiskCat.nTotalBlocks);
-        unsigned int totalbytes = totalblocks * m_nBlockSize;
-        auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
-        return imgUtil::string_format(strf.c_str(), freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
-                static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
-                freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)].c_str(),
-                bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)].c_str(),
-                totalblocks, totalbytes);
-    }
-
-    return strf;
+    auto freeblocks = static_cast<unsigned int>(m_sDiskCat.nFreeBlocks);
+    unsigned int bytes = freeblocks * m_nBlockSize;
+    auto totalblocks = static_cast<unsigned int>(m_sDiskCat.nTotalBlocks);
+    unsigned int totalbytes = totalblocks * m_nBlockSize;
+    auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
+    return imgUtil::string_format(strf,
+            freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)],
+            static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
+            freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)],
+            bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)],
+            totalblocks, totalbytes);
 }
 
 const size_t CBKFloppyImage_Prototype::GetImageFreeSpace() const

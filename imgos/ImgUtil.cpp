@@ -48,11 +48,11 @@ const std::wstring g_ImageErrorStr[] =
 };
 
 
-const std::wstring imgUtil::tblStrRec[3] =
+const wchar_t* imgUtil::tblStrRec[3] =
 {
     L"ь", L"и", L"ей"
 };
-const std::wstring imgUtil::tblStrBlk[3] =
+const wchar_t* imgUtil::tblStrBlk[3] =
 {
     L"", L"а", L"ов"
 };

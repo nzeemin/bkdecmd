@@ -427,23 +427,19 @@ const std::wstring CBKFloppyImage_ANDos::GetSpecificData(BKDirDataItem *fr) cons
 
 const std::wstring CBKFloppyImage_ANDos::GetImageInfo() const
 {
-    std::wstring strf = L"Свободно в каталоге: %d запис%s из %d. Свободно: %d кластер%s / %d байт%s из %d / %d"; //imgUtil::LoadStringFromResource(IDS_INFO_FREE_CLUS);
+    const wchar_t* strf = L"Свободно в каталоге: %d запис%ls из %d. Свободно: %d кластер%ls / %d байт%ls из %d / %d";
 
-    if (!strf.empty())
-    {
-        auto freeblocks = static_cast<unsigned int>(m_sDiskCat.nFreeBlocks);
-        auto totalblocks = static_cast<unsigned int>(m_sDiskCat.nTotalBlocks);
-        auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
-        unsigned int bytes = freeblocks * m_nClusterSize;
-        unsigned int totalbytes = totalblocks * m_nClusterSize;
-        return imgUtil::string_format(strf.c_str(), freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)].c_str(),
-                static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
-                freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)].c_str(),
-                bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)].c_str(),
-                totalblocks, totalbytes);
-    }
-
-    return strf;
+    auto freeblocks = static_cast<unsigned int>(m_sDiskCat.nFreeBlocks);
+    auto totalblocks = static_cast<unsigned int>(m_sDiskCat.nTotalBlocks);
+    auto freerecs = static_cast<unsigned int>(m_sDiskCat.nFreeRecs);
+    unsigned int bytes = freeblocks * m_nClusterSize;
+    unsigned int totalbytes = totalblocks * m_nClusterSize;
+    return imgUtil::string_format(strf,
+            freerecs, imgUtil::tblStrRec[imgUtil::GetWordEndIdx(freerecs)],
+            static_cast<unsigned int>(m_sDiskCat.nTotalRecs),
+            freeblocks, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(freeblocks)],
+            bytes, imgUtil::tblStrBlk[imgUtil::GetWordEndIdx(bytes)],
+            totalblocks, totalbytes);
 }
 
 const size_t CBKFloppyImage_ANDos::GetImageFreeSpace() const

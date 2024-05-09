@@ -127,8 +127,8 @@ struct AnalyseFileStruct
 
 namespace imgUtil
 {
-    extern const std::wstring tblStrRec[3]; // окончания для записей
-    extern const std::wstring tblStrBlk[3]; // окончания для блоков
+    extern const wchar_t* tblStrRec[3]; // окончания для записей
+    extern const wchar_t* tblStrBlk[3]; // окончания для блоков
 
     // получим номер окончания слова в зависимости от числа num
     uint32_t GetWordEndIdx(uint32_t num);

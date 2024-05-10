@@ -28,11 +28,8 @@ build:
 test_script:
   cmd: |
     cd %APPVEYOR_BUILD_FOLDER%
-    if %PLATFORM% == "x86" (
-      set RUNPATH=%CONFIGURATION%
-    ) else (
-      set RUNPATH=x664\%CONFIGURATION%
-    )
+    if %PLATFORM% == "x86" set RUNPATH=%CONFIGURATION%
+    if %PLATFORM% == "x64" set RUNPATH=x664\%CONFIGURATION%
     %RUNPATH%\bkdecmd.exe i images\ANDOS330.IMG
     %RUNPATH%\bkdecmd.exe l images\ANDOS330.IMG
     %RUNPATH%\bkdecmd.exe lr images\ANDOS330.IMG

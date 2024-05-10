@@ -30,11 +30,11 @@ bool DoDiskDeleteFile();
 // Globals
 
 #ifdef _MSC_VER
-#define OPTIONCHAR '/'
-#define OPTIONSTR "/"
+#define OPTIONCHAR L'/'
+#define OPTIONSTR L"/"
 #else
-#define OPTIONCHAR '-'
-#define OPTIONSTR "-"
+#define OPTIONCHAR L'-'
+#define OPTIONSTR L"-"
 #endif
 
 std::wstring g_sCommand;
@@ -42,6 +42,7 @@ std::wstring g_sImageFileName;
 fs::path g_pathImageFileName;
 std::wstring g_sFileName;
 fs::path g_pathFileName;
+bool g_okCalcSHA1 = false;
 
 enum CommandRequirements
 {
@@ -88,12 +89,14 @@ void PrintUsage()
 {
     std::wcout << std::endl << L"Использование:" << std::endl
             << L"  Команды для работы с образами дисков:" << std::endl
-            << L"    bkdecmd l <ImageFile>  - показать содержимое корневой директории" << std::endl
+            << L"    bkdecmd l <ImageFile>   - показать содержимое корневой директории" << std::endl
             << L"    bkdecmd lr <ImageFile>  - показать содержимое диска рекурсивным обходом директорий" << std::endl
             << L"    bkdecmd lm <ImageFile>  - показать содержимое диска в RAR-подобном формате" << std::endl
             << L"    bkdecmd e <ImageFile> <FileName>  - извлечь файл" << std::endl
             << L"    bkdecmd a <ImageFile> <FileName>  - добавить файл" << std::endl
-            << L"    bkdecmd d <ImageFile> <FileName>  - удалить файл" << std::endl;
+            << L"    bkdecmd d <ImageFile> <FileName>  - удалить файл" << std::endl
+            << L"  Опции:" << std::endl
+            << L"    " << OPTIONSTR << L"sha1     Вычислять и показывать для файлов хэш SHA1" << std::endl;
 }
 
 bool ParseCommandLine(std::vector<std::wstring>& wargs)
@@ -103,6 +106,11 @@ bool ParseCommandLine(std::vector<std::wstring>& wargs)
         const wchar_t* arg = warg.c_str();
         if (arg[0] == OPTIONCHAR)
         {
+            if (wcscmp(arg + 1, L"sha1") == 0)
+            {
+                g_okCalcSHA1 = true;
+            }
+            else
             {
                 std::wcout << L"Неизвестная опция: " << arg << std::endl;
                 return false;
@@ -246,6 +254,7 @@ int wmain_impl(std::vector<std::wstring>& wargs)
 
     // теперь, если образ опознался, надо создать объект, соответствующий файловой системе
     g_BKImage.ClearImgVector();
+    g_BKImage.SetCalcSHA1(g_okCalcSHA1);
 
     uint32_t flg = g_BKImage.Open(g_sParseResult);
     if (flg == 0)
@@ -259,8 +268,11 @@ int wmain_impl(std::vector<std::wstring>& wargs)
     //std::wcout << L"Свободно: " << g_BKImage.GetImageFreeSpace() << L"  ";
     std::wcout << L"Режим: " << (g_BKImage.GetImageOpenStatus() ? L"RO" : L"RW") << std::endl;
 
-    if (!g_BKImage.PrintImageSHA1())
-        return 255;
+    if (g_okCalcSHA1)
+    {
+        if (!g_BKImage.PrintImageSHA1())
+            return 255;
+    }
 
     std::wcout << std::endl;
 

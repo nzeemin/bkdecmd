@@ -1,5 +1,5 @@
 
-CXXFLAGS = -std=c++17 -Wall -g -O0
+CXXFLAGS = -std=c++17 -O3 -Wall
 
 SOURCES_IMGOS = $(foreach dir, ./imgos, $(wildcard $(dir)/*.cpp))
 SOURCES = pch.cpp bkdecmd.cpp BKImage.cpp BKImgFile.cpp BKParseImage.cpp StringUtil.cpp $(SOURCES_IMGOS)

@@ -18,9 +18,12 @@
 
 const wchar_t* S_CATALOG_HEADER_DEFAULT    = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. |";
 const wchar_t* S_CATALOG_SEPARATOR_DEFAULT = L"-------------------------|------|------------------------|------|";
-const wchar_t* S_CATALOG_SEPARATOR_TAIL = L"------------------";
+const wchar_t* S_CATALOG_HEADER_SHA1       = L"| SHA1                                    ";
+const wchar_t* S_CATALOG_SEPARATOR_SHA1    = L"|-----------------------------------------";
 const wchar_t* S_CATALOG_HEADER_RAR_LIKE    = L" Attributes      Size    Date   Time   Name";
 const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE = L"----------- ---------  -------- -----  ----";
+const wchar_t* S_CATALOG_HEADER_RAR_LIKE_SHA1    = L" Attributes      Size    Date   Time   SHA1                                      Name";
+const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE_SHA1 = L"----------- ---------  -------- -----  ----------------------------------------  ----";
 
 
 std::wstring g_AddOpErrorStr[] =
@@ -216,16 +219,25 @@ void CBKImage::PrintCatalogTableHead()
 
         std::wcout << S_CATALOG_HEADER_DEFAULT;
         if (!strSpecific.empty())
-            std::wcout << L" " << strSpecific;
+            std::wcout << L" " << strSpecific << L" ";
+        if (m_bCalcSHA1)
+            std::wcout << S_CATALOG_HEADER_SHA1;
         std::wcout << std::endl;
+
         std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
         if (!strSpecific.empty())
-            std::wcout << S_CATALOG_SEPARATOR_TAIL;
+        {
+            std::wstring strTail(strSpecific.length() + 2, L'-');
+            std::wcout << strTail;
+        }
+
+        if (m_bCalcSHA1)
+            std::wcout << S_CATALOG_SEPARATOR_SHA1;
     }
     else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)
     {
-        std::wcout << S_CATALOG_HEADER_RAR_LIKE << std::endl;
-        std::wcout << S_CATALOG_SEPARATOR_RAR_LIKE;
+        std::wcout << (m_bCalcSHA1 ? S_CATALOG_HEADER_RAR_LIKE_SHA1 : S_CATALOG_HEADER_RAR_LIKE) << std::endl;
+        std::wcout << (m_bCalcSHA1 ? S_CATALOG_SEPARATOR_RAR_LIKE_SHA1 : S_CATALOG_SEPARATOR_RAR_LIKE);
     }
 
     std::wcout << std::endl;
@@ -239,7 +251,13 @@ void CBKImage::PrintCatalogTableTail()
 
         std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
         if (!strSpecific.empty())
-            std::wcout << S_CATALOG_SEPARATOR_TAIL;
+        {
+            std::wstring strTail(strSpecific.length() + 2, L'-');
+            std::wcout << strTail;
+        }
+
+        if (m_bCalcSHA1)
+            std::wcout << S_CATALOG_SEPARATOR_SHA1;
     }
 
     std::wcout << std::endl;
@@ -399,7 +417,13 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
         if (!strSpecific.empty())
         {
             std::wstring strSpec = m_pFloppyImage->GetSpecificData(std::addressof(fr));
-            std::wcout << strSpec << L" ";
+            std::wcout << std::setw(strSpecific.length()) << std::left << strSpec;
+        }
+
+        if (m_bCalcSHA1)
+        {
+            std::wstring strHash = m_pFloppyImage->CalcFileSHA1(&fr);
+            std::wcout << L" | " << strHash;
         }
     }
     else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)
@@ -427,6 +451,12 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
             std::wcout << L"                ";
         else
             std::wcout << strDate << L" 00:00  ";
+
+        if (m_bCalcSHA1)
+        {
+            std::wstring strHash = m_pFloppyImage->CalcFileSHA1(&fr);
+            std::wcout << strHash << L"  ";
+        }
 
         std::wcout << dirpath << strName << L"  ";
     }
@@ -1134,7 +1164,8 @@ bool CBKImage::AnalyseExportFile(AnalyseFileStruct *a)
     if (f)
     {
         std::wstring origName = imgUtil::BKToUNICODE(a->OrigName, 16, m_pFloppyImage->m_pKoi8tbl);
-        fwprintf(f, L"%-20s:\t%s\tload:%06o\tlen:%06o\tstart:%06o\n", a->strName.c_str(), origName.c_str(), a->nAddr, a->nLen, nStartAddr);
+        fwprintf(f, L"%-20ls:\t%ls\tload:%06o\tlen:%06o\tstart:%06o\n",
+                 a->strName.c_str(), origName.c_str(), a->nAddr, a->nLen, nStartAddr);
         fclose(f);
     }
 

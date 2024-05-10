@@ -135,6 +135,8 @@ public:
 
     std::wstring CalcImageSHA1();
 
+    std::wstring CalcFileSHA1(BKDirDataItem *fr);
+
 public:  // виртуальные функции
 
     // Строка с названием поля для данных, специфических для заданной ОС

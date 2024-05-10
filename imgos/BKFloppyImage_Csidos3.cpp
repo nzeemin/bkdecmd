@@ -31,7 +31,7 @@ const std::wstring CBKFloppyImage_Csidos3::GetSpecificData(BKDirDataItem *fr) co
     {
         int p0 = (dd >> 4) & 7;
         int p1 = dd & 7;
-        str = imgUtil::string_format(L"%s; %d:%d\0", ((dd & 010) ? L"БК11" : L"БК10"), PgNumF2L[p0], PgNumF2L[p1]);
+        str = imgUtil::string_format(L"%ls; %d:%d\0", ((dd & 010) ? L"БК11" : L"БК10"), PgNumF2L[p0], PgNumF2L[p1]);
     }
 
     return str;

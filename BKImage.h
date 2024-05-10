@@ -56,6 +56,7 @@ class CBKImage
     bool m_bCheckUseLongBinStatus;  // состояние чекбоксов "использовать формат бин"
     bool m_bCheckLogExtractStatus;  // и "создавать лог извлечения" соответственно, проще их тут хранить, чем запрашивать сложными путями у родителя
     LISTING_FORMAT m_nListingFormat;
+    bool m_bCalcSHA1;               // Считать и показывать SHA1 для файлов
 
     //PaneInfo                m_PaneInfo;  //TODO: Убрать
     std::vector<PaneInfo>   m_vSelItems;  //TODO: Убрать
@@ -118,6 +119,7 @@ public:
         m_bCheckLogExtractStatus = bStatus;
     }
     inline void SetListingFormat(LISTING_FORMAT format) { m_nListingFormat = format; }
+    inline void SetCalcSHA1(bool flag) { m_bCalcSHA1 = flag; }
 
     // Подсчитать и напечатать значение хэша SHA1 для образа диска
     bool PrintImageSHA1();

@@ -1,5 +1,7 @@
 ﻿#include "../pch.h"
 #include "BKFloppyImage_Prototype.h"
+#include "../hashes/sha1.hpp"
+#include "../StringUtil.h"
 
 
 CBKFloppyImage_Prototype::CBKFloppyImage_Prototype(const PARSE_RESULT &image)
@@ -156,6 +158,25 @@ bool CBKFloppyImage_Prototype::SeektoBlkWriteData(size_t nBlockNumber, void *ptr
 std::wstring CBKFloppyImage_Prototype::CalcImageSHA1()
 {
     return m_pFoppyImgFile.CalcImageSHA1();
+}
+
+std::wstring CBKFloppyImage_Prototype::CalcFileSHA1(BKDirDataItem *fr)
+{
+    ASSERT(fr != nullptr);
+    if (fr == nullptr || (fr->nAttr & (FR_ATTR::DIR | FR_ATTR::LINK)) != 0)
+        return L"";
+
+    std::vector<uint8_t> vec(fr->nBlkSize * BLOCK_SIZE);
+    if (!ReadFile(fr, vec.data()))
+    {
+        //TODO: Показать ошибку
+        return L"";
+    }
+
+    SHA1 hash;
+    hash.update(vec.data(), fr->nSize);
+
+    return strUtil::stringToWstring(hash.final());
 }
 
 // виртуальная функция, для каждой ФС - своя реализация.

@@ -54,9 +54,9 @@ jobs:
         ./bkdecmd lm ./images/CSIDOS.IMG
         ./bkdecmd lm ./images/MKDOS315.IMG
         ./bkdecmd lm ./images/NORD_1.bkd
-        ./bkdecmd lm -saha1 ./images/ANDOS330.IMG
-        ./bkdecmd lm -saha1 ./images/AODOS.IMG
-        ./bkdecmd lm -saha1 ./images/BK_SYS.DSK
-        ./bkdecmd lm -saha1 ./images/CSIDOS.IMG
-        ./bkdecmd lm -saha1 ./images/MKDOS315.IMG
-        ./bkdecmd lm -saha1 ./images/NORD_1.bkd
+        ./bkdecmd lm -sha1 ./images/ANDOS330.IMG
+        ./bkdecmd lm -sha1 ./images/AODOS.IMG
+        ./bkdecmd lm -sha1 ./images/BK_SYS.DSK
+        ./bkdecmd lm -sha1 ./images/CSIDOS.IMG
+        ./bkdecmd lm -sha1 ./images/MKDOS315.IMG
+        ./bkdecmd lm -sha1 ./images/NORD_1.bkd

@@ -259,6 +259,10 @@ void CBKImage::PrintCatalogTableTail()
         if (m_bCalcSHA1)
             std::wcout << S_CATALOG_SEPARATOR_SHA1;
     }
+    else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)
+    {
+        std::wcout << (m_bCalcSHA1 ? S_CATALOG_SEPARATOR_RAR_LIKE_SHA1 : S_CATALOG_SEPARATOR_RAR_LIKE);
+    }
 
     std::wcout << std::endl;
 }
@@ -513,13 +517,16 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive, std:
         //TODO: Если логический диск и рекурсивный обход, то идём вниз
     }
 
-    if (level == 0 && m_nListingFormat == LISTING_FORMAT::DEFAULT)
+    if (level == 0)
     {
         PrintCatalogTableTail();
 
-        // Печатаем суммарную информацию под каталогом
-        std::wcout << std::endl;
-        PrintImageInfo();
+        if (m_nListingFormat == LISTING_FORMAT::DEFAULT)
+        {
+            // Печатаем суммарную информацию под каталогом
+            std::wcout << std::endl;
+            PrintImageInfo();
+        }
     }
 
     return true;

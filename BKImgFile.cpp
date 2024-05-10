@@ -263,9 +263,11 @@ std::wstring CBKImgFile::CalcImageSHA1()
             ? bufferSizeInBlocks
             : (reminder + BLOCK_SIZE - 1) / BLOCK_SIZE;
         
-        //TODO: Показать что за ошибка
         if (!ReadLBA(vec.data(), lbano, blocksToRead))
+        {
+            std::wcout << L"Проблема при чтении образа диска при подсчёте SHA1." << std::endl;
             return L"";
+        }
 
         hash.update(vec.data(), blocksToRead * BLOCK_SIZE);
 

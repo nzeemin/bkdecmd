@@ -629,7 +629,7 @@ BKDirDataItem* CBKImage::FindFileRecord(std::wstring strFileName)
 //}
 
 // Спускаемся на уровень вниз, в под-директорию или в логический диск
-void CBKImage::StepIntoDir(BKDirDataItem *fr)
+bool CBKImage::StepIntoDir(BKDirDataItem *fr)
 {
     //BKDirDataItem frc;
     //frc.clear();
@@ -641,6 +641,7 @@ void CBKImage::StepIntoDir(BKDirDataItem *fr)
     {
         //TODO: Обработка ошибки
         //	AfxGetMainWnd()->SendMessage(WM_SEND_ERRORNUM, WPARAM(0), static_cast<LPARAM>(m_pFloppyImage->GetErrorNumber()));
+        return false;
     }
 
     //// Записываем frc в стек для будущего возврата
@@ -653,6 +654,8 @@ void CBKImage::StepIntoDir(BKDirDataItem *fr)
     //	m_PaneInfo.nTopItem = 0;
     //	m_PaneInfo.nCurItem = 0;
     //	OutCurrFilePath();
+
+    return true;
 }
 
 // Выходим вверх из под-директории или из логического диска
@@ -685,6 +688,7 @@ bool CBKImage::StepUptoDir(BKDirDataItem *fr)
     }
     else
     {
+        //TODO: Обработка ошибки
         //AfxGetMainWnd()->SendMessage(WM_SEND_ERRORNUM, WPARAM(0), static_cast<LPARAM>(m_pFloppyImage->GetErrorNumber()));
     }
 

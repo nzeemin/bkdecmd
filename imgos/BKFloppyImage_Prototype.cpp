@@ -169,7 +169,7 @@ std::wstring CBKFloppyImage_Prototype::CalcFileSHA1(BKDirDataItem *fr)
     std::vector<uint8_t> vec(EvenSizeByBlock(fr->nSize));
     if (!ReadFile(fr, vec.data()))
     {
-        //TODO: Показать ошибку
+        std::wcout << L"Проблема чтения файла из образа диска при подсчёте SHA1." << std::endl;
         return L"";
     }
 

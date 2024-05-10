@@ -164,7 +164,7 @@ protected:
     // Печать одной строки для вывода одного элемента каталога: файла/директории
     void PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpath);
 
-    void StepIntoDir(BKDirDataItem* fr);
+    bool StepIntoDir(BKDirDataItem* fr);
     bool StepUptoDir(BKDirDataItem* fr);
 
     bool ExtractObject(BKDirDataItem* fr);

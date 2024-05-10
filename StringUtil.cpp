@@ -101,20 +101,11 @@ std::wstring strUtil::strToUpper(const std::wstring &str)
 
     if (!str.empty())
     {
-#ifdef WIN32
-        _locale_t loc = _create_locale(LC_ALL, "Russian");
-        for (auto n : str)
-        {
-            res.push_back(toupper_l(n, loc));
-        }
-        _free_locale(loc);
-#else
         std::locale loc = std::locale("ru-ru");
         for (auto n : str)
         {
             res.push_back(toupper(n, loc));
         }
-#endif
     }
 
     return res;
@@ -126,20 +117,11 @@ std::wstring strUtil::strToLower(const std::wstring &str)
 
     if (!str.empty())
     {
-#ifdef WIN32
-        locale_t loc = _create_locale(LC_ALL, "Russian");
-        for (auto n : str)
-        {
-            res.push_back(tolower_l(n, loc));
-        }
-        _free_locale(loc);
-#else
         std::locale loc = std::locale("ru-ru");
         for (auto n : str)
         {
             res.push_back(tolower(n, loc));
         }
-#endif
     }
 
     return res;

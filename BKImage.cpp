@@ -424,10 +424,11 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
             std::wcout << std::setw(strSpecific.length()) << std::left << strSpec;
         }
 
-        if (m_bCalcSHA1)
+        std::wcout << L" | ";
+        if (m_bCalcSHA1 && (fr.nAttr & FR_ATTR::DELETED) == 0)
         {
             std::wstring strHash = m_pFloppyImage->CalcFileSHA1(&fr);
-            std::wcout << L" | " << strHash;
+            std::wcout << strHash;
         }
     }
     else if (m_nListingFormat == LISTING_FORMAT::RAR_LIKE)

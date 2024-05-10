@@ -2,6 +2,7 @@
 //
 
 #include "pch.h"
+#include <clocale>
 
 #include "BKParseImage.h"
 #include "BKImage.h"
@@ -209,6 +210,7 @@ int main(int argc, char* argv[])
 {
     // Console output mode
     std::setlocale(LC_ALL, "");
+    std::wcout.imbue(std::locale(""));
 
     std::vector<std::wstring> wargs;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;

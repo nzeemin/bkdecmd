@@ -166,7 +166,7 @@ std::wstring CBKFloppyImage_Prototype::CalcFileSHA1(BKDirDataItem *fr)
     if (fr == nullptr || (fr->nAttr & (FR_ATTR::DIR | FR_ATTR::LINK)) != 0)
         return L"";
 
-    std::vector<uint8_t> vec(fr->nSize);
+    std::vector<uint8_t> vec(EvenSizeByBlock(fr->nSize));
     if (!ReadFile(fr, vec.data()))
     {
         //TODO: Показать ошибку

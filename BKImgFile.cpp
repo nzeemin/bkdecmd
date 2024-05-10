@@ -246,7 +246,7 @@ std::wstring CBKImgFile::CalcImageSHA1()
     if (!m_f)
         return L"";
 
-    const size_t bufferSizeInBlocks = 16;
+    const size_t bufferSizeInBlocks = 32;
     const size_t bufferSizeInBytes = BLOCK_SIZE * bufferSizeInBlocks;
 
     long sizeTotal = GetFileSize();

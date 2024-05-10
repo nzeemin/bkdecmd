@@ -54,7 +54,7 @@ constexpr auto DALE_BITMAP_CRC_OFFSET = 054; // контрольная сумм�
 constexpr auto DALE_BITMAP_ARRAY_OFFSET = 056; // собственно битовая карта, размер 01000-056 байтов
 
 
-class СBKFloppyImage_DaleOS :
+class CBKFloppyImage_DaleOS :
     public CBKFloppyImage_Prototype
 {
     std::vector<uint8_t> m_vCatBuffer;  // буфер каталога
@@ -90,8 +90,8 @@ protected:
     virtual void ConvertRealToAbstractRecord(BKDirDataItem *pFR) override;
 
 public:
-    СBKFloppyImage_DaleOS(const PARSE_RESULT &image);
-    virtual ~СBKFloppyImage_DaleOS() override;
+    CBKFloppyImage_DaleOS(const PARSE_RESULT &image);
+    virtual ~CBKFloppyImage_DaleOS() override;
     /* прочитать каталог образа.
      на выходе: заполненная структура m_sDiskCat */
     virtual bool ReadCurrentDir() override;

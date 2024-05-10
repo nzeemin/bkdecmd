@@ -9,7 +9,7 @@ constexpr uint16_t FA$EOC = 4;      //1 = признак конца катало
 constexpr uint16_t FA$SYSTEM = 20;  //1 = системный файл
 
 
-СBKFloppyImage_DaleOS::СBKFloppyImage_DaleOS(const PARSE_RESULT &image)
+CBKFloppyImage_DaleOS::CBKFloppyImage_DaleOS(const PARSE_RESULT &image)
     : CBKFloppyImage_Prototype(image)
     , m_nDataBlock(0)
     , m_nDiskSizeBlk(0)
@@ -17,17 +17,17 @@ constexpr uint16_t FA$SYSTEM = 20;  //1 = системный файл
     m_vCatBuffer.resize(DALE_CAT_SIZE);
 }
 
-СBKFloppyImage_DaleOS::~СBKFloppyImage_DaleOS()
+CBKFloppyImage_DaleOS::~CBKFloppyImage_DaleOS()
 {
 }
 
-// int СBKFloppyImage_DaleOS::FindRecord(DaleOSFileRecord *pPec)
+// int CBKFloppyImage_DaleOS::FindRecord(DaleOSFileRecord *pPec)
 // {
 //
 // }
 
 
-void СBKFloppyImage_DaleOS::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool bRenameOnly /*= false*/)
+void CBKFloppyImage_DaleOS::ConvertAbstractToRealRecord(BKDirDataItem *pFR, bool bRenameOnly /*= false*/)
 {
     auto pRec = reinterpret_cast<DaleOSFileRecord *>(pFR->pSpecificData); // Вот эту запись надо добавить
 
@@ -70,7 +70,7 @@ void СBKFloppyImage_DaleOS::ConvertAbstractToRealRecord(BKDirDataItem *pFR, boo
 }
 
 
-void СBKFloppyImage_DaleOS::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
+void CBKFloppyImage_DaleOS::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
 {
     auto pRec = reinterpret_cast<DaleOSFileRecord *>(pFR->pSpecificData); // Вот эту запись надо преобразовать
 
@@ -103,7 +103,7 @@ void СBKFloppyImage_DaleOS::ConvertRealToAbstractRecord(BKDirDataItem *pFR)
     }
 }
 
-bool СBKFloppyImage_DaleOS::ReadDaleCatalog()
+bool CBKFloppyImage_DaleOS::ReadDaleCatalog()
 {
     // Перемещаемся к блоку с битовой картой и читаем его
     if (!SeektoBlkReadData(DALE_BITMAP_BLK, m_nSector, sizeof(m_nSector)))
@@ -173,7 +173,7 @@ bool СBKFloppyImage_DaleOS::ReadDaleCatalog()
     return true;
 }
 
-bool СBKFloppyImage_DaleOS::ReadCurrentDir()
+bool CBKFloppyImage_DaleOS::ReadCurrentDir()
 {
     if (!CBKFloppyImage_Prototype::ReadCurrentDir())
     {
@@ -203,7 +203,7 @@ bool СBKFloppyImage_DaleOS::ReadCurrentDir()
     return true;
 }
 
-bool СBKFloppyImage_DaleOS::ReadFile(BKDirDataItem *pFR, uint8_t *pBuffer)
+bool CBKFloppyImage_DaleOS::ReadFile(BKDirDataItem *pFR, uint8_t *pBuffer)
 {
     m_nLastErrorNumber = IMAGE_ERROR::OK_NOERRORS;
     bool bRet = true;
@@ -233,7 +233,7 @@ bool СBKFloppyImage_DaleOS::ReadFile(BKDirDataItem *pFR, uint8_t *pBuffer)
 
 //#ifdef _DEBUG
 //// отладочный вывод каталога
-//void СBKFloppyImage_DaleOS::DebugOutCatalog()
+//void CBKFloppyImage_DaleOS::DebugOutCatalog()
 //{
 //	auto strModuleName = std::vector<wchar_t>(_MAX_PATH);
 //	::GetModuleFileName(AfxGetInstanceHandle(), strModuleName.data(), _MAX_PATH);

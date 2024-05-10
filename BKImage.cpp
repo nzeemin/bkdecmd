@@ -116,7 +116,7 @@ uint32_t CBKImage::Open(PARSE_RESULT &pr, const bool bLogDisk)
         break;
 
     case IMAGE_TYPE::DALE:
-        m_pFloppyImage = std::make_unique < СBKFloppyImage_DaleOS > (pr);
+        m_pFloppyImage = std::make_unique < CBKFloppyImage_DaleOS > (pr);
         break;
 
     default:

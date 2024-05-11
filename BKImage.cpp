@@ -16,10 +16,10 @@
 //#include "imgos/BKFloppyImage_MSDOS.h"
 
 
-const wchar_t* S_CATALOG_HEADER_DEFAULT    = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. |";
-const wchar_t* S_CATALOG_SEPARATOR_DEFAULT = L"-------------------------|------|------------------------|------|";
+const wchar_t* S_CATALOG_HEADER_DEFAULT    = L" Имя файла               | Тип  | Блоков  Адрес   Размер | Атр. ";
+const wchar_t* S_CATALOG_SEPARATOR_DEFAULT = L"-------------------------|------|------------------------|------";
 const wchar_t* S_CATALOG_HEADER_SHA1       = L"| SHA1                                    ";
-const wchar_t* S_CATALOG_SEPARATOR_SHA1    = L"|-----------------------------------------";
+const wchar_t* S_CATALOG_SEPARATOR_SHA1    = L"|------------------------------------------";
 const wchar_t* S_CATALOG_HEADER_RAR_LIKE    = L" Attributes      Size  Addr     Date   Time   Name";
 const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE = L"----------- --------- ------  -------- -----  ----";
 const wchar_t* S_CATALOG_HEADER_RAR_LIKE_SHA1    = L" Attributes      Size  Addr     Date   Time   SHA1                                      Name";
@@ -219,7 +219,7 @@ void CBKImage::PrintCatalogTableHead()
 
         std::wcout << S_CATALOG_HEADER_DEFAULT;
         if (!strSpecific.empty())
-            std::wcout << L" " << strSpecific << L" ";
+            std::wcout << L"| " << strSpecific << L" ";
         if (m_bCalcSHA1)
             std::wcout << S_CATALOG_HEADER_SHA1;
         std::wcout << std::endl;
@@ -227,8 +227,8 @@ void CBKImage::PrintCatalogTableHead()
         std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
         if (!strSpecific.empty())
         {
-            std::wstring strTail(strSpecific.length() + 2, L'-');
-            std::wcout << strTail;
+            std::wstring strTail(strSpecific.length() + 1, L'-');
+            std::wcout << L"|-" << strTail;
         }
 
         if (m_bCalcSHA1)
@@ -252,8 +252,8 @@ void CBKImage::PrintCatalogTableTail()
         std::wcout << S_CATALOG_SEPARATOR_DEFAULT;
         if (!strSpecific.empty())
         {
-            std::wstring strTail(strSpecific.length() + 2, L'-');
-            std::wcout << strTail;
+            std::wstring strTail(strSpecific.length() + 1, L'-');
+            std::wcout << L"|-" << strTail;
         }
 
         if (m_bCalcSHA1)
@@ -415,11 +415,12 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
             std::wcout << std::setw(7) << std::right << buff << L" | ";
         }
 
-        std::wcout << std::setw(4) << std::left << strAttr << L" | ";
+        std::wcout << std::setw(4) << std::left << strAttr;
 
         std::wstring strSpecific = m_pFloppyImage->HasSpecificData();
         if (!strSpecific.empty())
         {
+            std::wcout << L" | ";
             std::wstring strSpec = m_pFloppyImage->GetSpecificData(std::addressof(fr));
             std::wcout << std::setw(strSpecific.length()) << std::left << strSpec;
         }
@@ -439,7 +440,7 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
         std::wcout << L"   " << std::setw(7) << std::setfill(L'.') << std::left << strAttr << L"  ";
 
         wchar_t buff[32];
-        swprintf(buff, 32, L"%d\0", fr.nBlkSize * 512);
+        swprintf(buff, 32, L"%d\0", fr.nSize);
         std::wcout << std::setw(9) << std::setfill(L' ') << std::right << buff << " ";
         swprintf(buff, 32, L"%06o\0", fr.nAddress);
         std::wcout << std::setw(6) << std::right << buff << "  ";

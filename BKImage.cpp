@@ -20,10 +20,10 @@ const wchar_t* S_CATALOG_HEADER_DEFAULT    = L" Имя файла               
 const wchar_t* S_CATALOG_SEPARATOR_DEFAULT = L"-------------------------|------|------------------------|------|";
 const wchar_t* S_CATALOG_HEADER_SHA1       = L"| SHA1                                    ";
 const wchar_t* S_CATALOG_SEPARATOR_SHA1    = L"|-----------------------------------------";
-const wchar_t* S_CATALOG_HEADER_RAR_LIKE    = L" Attributes      Size    Date   Time   Name";
-const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE = L"----------- ---------  -------- -----  ----";
-const wchar_t* S_CATALOG_HEADER_RAR_LIKE_SHA1    = L" Attributes      Size    Date   Time   SHA1                                      Name";
-const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE_SHA1 = L"----------- ---------  -------- -----  ----------------------------------------  ----";
+const wchar_t* S_CATALOG_HEADER_RAR_LIKE    = L" Attributes      Size  Addr     Date   Time   Name";
+const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE = L"----------- --------- ------  -------- -----  ----";
+const wchar_t* S_CATALOG_HEADER_RAR_LIKE_SHA1    = L" Attributes      Size  Addr     Date   Time   SHA1                                      Name";
+const wchar_t* S_CATALOG_SEPARATOR_RAR_LIKE_SHA1 = L"----------- --------- ------  -------- -----  ----------------------------------------  ----";
 
 
 std::wstring g_AddOpErrorStr[] =
@@ -440,7 +440,9 @@ void CBKImage::PrintItem(BKDirDataItem& fr, const int level, std::wstring dirpat
 
         wchar_t buff[32];
         swprintf(buff, 32, L"%d\0", fr.nBlkSize * 512);
-        std::wcout << std::setw(9) << std::setfill(L' ') << std::right << buff << "  ";
+        std::wcout << std::setw(9) << std::setfill(L' ') << std::right << buff << " ";
+        swprintf(buff, 32, L"%06o\0", fr.nAddress);
+        std::wcout << std::setw(6) << std::right << buff << "  ";
 
         std::wstring strDate;
         std::wstring strSpecific = m_pFloppyImage->HasSpecificData();

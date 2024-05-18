@@ -502,7 +502,7 @@ bool CBKImage::PrintCurrentDirectory(const int level, const bool recursive, std:
             PrintItem(fr, level, dirpath);
 
         // Если директория и рекурсивный обход, то идём вниз
-        if (recursive && fr.IsDirectory())
+        if (recursive && fr.IsDirectory() && (fr.nAttr & (FR_ATTR::LINK | FR_ATTR::DELETED)) == 0)
         {
             // Запись для возврата к текущей директории
             BKDirDataItem frc;
